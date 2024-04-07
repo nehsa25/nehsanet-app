@@ -1,0 +1,11 @@
+{
+  "name": "nehsanet",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
