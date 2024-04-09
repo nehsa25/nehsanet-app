@@ -8,16 +8,6 @@ app.listen(port, () => {
     console.log(`Listing on port ${port}`);
 });
 
-app.get('/api/v1/contactme', (req, res) => {
-    const id = req.params.id;
-    if (id === 1) {
-        res.status(404).send({ error: 'example 404' });
-    } else {
-        res.send({ data: "yay" });
-    }
-});
-
-
 app.post('/api/v1/contactme', (req, res) => {
     let content = `${req.body.subject}: ${req.body.body}\n`
     let success = true;
