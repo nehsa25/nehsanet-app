@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 contactme.txt
+out/
 
 # Node
 /node_modules
