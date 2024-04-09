@@ -1,8 +1,9 @@
 import express from 'express';
+import fs from 'fs'
 const app = express();
 app.use(express.json());
 app.use(express.static('nehsanet/dist/nehsanet/browser'))
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 4200;
 app.listen(port, () => {
     console.log(`Listing on port ${port}`);
 });
@@ -18,15 +19,14 @@ app.get('/api/v1/contactme', (req, res) => {
 
 
 app.post('/api/v1/contactme', (req, res) => {
-    const request = req.json();
-    const subject = request.contact_subject;
-    const body = request.contact_body;
-    if (id === 1) {
-        res.status(404).send({ error: 'example 404' });
-    } else {
-        res.send({ data: `You sent body: ${body}` });
-    }
+    let content = `${req.body.subject}: ${req.body.body}\n`
+    let success = true;
+    fs.writeFile('contactme.txt', content, { flag: 'a+' }, err => {
+        if (err) {
+            success = false;
+        } else {
+            console.log(`A contactme submission was captured:\n${content}`);
+        }
+      });
+      res.send({ data: success });
 });
-
-
-

@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /bazel-out
+contactme.txt
 
 # Node
 /node_modules
