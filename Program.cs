@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var  customOrigins = "_customOrigins";
 
 builder.Services.AddCors(options =>
@@ -11,7 +12,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: customOrigins,
                       policy  =>
                       {
-                          policy.WithOrigins("https://api.nehsa.net",
+                          policy.WithOrigins("https://www.nehsa.net",
                                               "http://localhost:4200");
                       });
 });
@@ -27,8 +28,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(customOrigins);
 }
+app.UseCors(customOrigins);
 
 app.UseHttpsRedirection();
 
@@ -44,6 +45,8 @@ var douglasAdamQuotes = new[]
     "“Time is an illusion. Lunchtime doubly so” - Douglas Adams", 
     "“Life is wasted on the living.” - Douglas Adams", 
     "“Don't Panic.” - Douglas Adams", 
+    "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams", 
+    "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams", 
 };
 
 app.MapGet("/api/v1/da", () =>
