@@ -1,0 +1,6 @@
+@nehsanet_app_HostAddress = https://api.nehsa.net
+
+GET {{nehsanet_app_HostAddress}}/api/v1/weatherforecast/
+Accept: application/json
+
+###
