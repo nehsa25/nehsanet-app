@@ -2,6 +2,10 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,16 +26,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseCors(customOrigins);
+app.UseHttpsRedirection();
+app.UseSwagger();
+app.Services.SaveSwaggerJson();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(customOrigins);
-
-app.UseHttpsRedirection();
 
 var douglasAdamQuotes = new[]
 {
@@ -49,12 +52,45 @@ var douglasAdamQuotes = new[]
     "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams", 
 };
 
-app.MapGet("/api/v1/da", () =>
+
+app.MapGet("/api/v1/da", [SwaggerOperation(
+        Summary = "Returns a single quote",
+        Description = "A random Douglas Adam quote is returned.  Because.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(500, "An error occurred")] () =>
 {
+
     return JsonSerializer.Serialize<string>(douglasAdamQuotes[Random.Shared.Next(douglasAdamQuotes.Length)]);
 })
 .WithName("DouglasAdamQuotes")
 .WithOpenApi();
 
+app.MapGet("/api/v1/swagger", [SwaggerOperation(
+        Summary = "Returns documentationm",
+        Description = "Returns Swagger documentation is raw JSON form")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(500, "An error occurred")] () =>
+{
+    string filename = "swagger.json";
+    string results = "No Swagger information found.";
+
+    if (File.Exists(filename))
+        results = JsonSerializer.Serialize<string>(File.ReadAllText(filename));
+
+    return results;
+})
+.WithName("Swagger Documentation")
+.WithOpenApi();
+
 app.Run();
 
+public static class SwaggerExtensions
+{
+    public static void SaveSwaggerJson(this IServiceProvider provider)
+    {
+        ISwaggerProvider sw = provider.GetRequiredService<ISwaggerProvider>();
+        OpenApiDocument doc = sw.GetSwagger("v1", null, "/");
+        string swaggerFile = doc.SerializeAsJson(Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0);
+        File.WriteAllText("swagger.json", swaggerFile);
+    }
+}
