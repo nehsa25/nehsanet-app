@@ -66,7 +66,7 @@ app.MapGet("/api/v1/da", [SwaggerOperation(
 .WithOpenApi();
 
 app.MapGet("/api/v1/swagger", [SwaggerOperation(
-        Summary = "Returns documentationm",
+        Summary = "Returns documentation",
         Description = "Returns Swagger documentation is raw JSON form")]
         [SwaggerResponse(200, "Success")]
         [SwaggerResponse(500, "An error occurred")] () =>
@@ -80,6 +80,17 @@ app.MapGet("/api/v1/swagger", [SwaggerOperation(
     return results;
 })
 .WithName("Swagger Documentation")
+.WithOpenApi();
+
+app.MapGet("/api/v1/adduser", [SwaggerOperation(
+        Summary = "Adds a new user to the system",
+        Description = "Adds a new user to the system")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(500, "An error occurred")] () =>
+{
+    return JsonSerializer.Serialize<string>("User added.");
+})
+.WithName("Add User")
 .WithOpenApi();
 
 app.Run();
