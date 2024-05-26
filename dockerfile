@@ -1,3 +1,4 @@
+
 # Use the official .NET Core SDK as a parent image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
@@ -18,7 +19,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 
 EXPOSE 22007/tcp   
-ENV ASPNETCORE_URLS=http://+:22007
 
 # Start the application
 ENTRYPOINT ["dotnet", "nehsanet-app.dll","--server.urls","http://*/22007"]

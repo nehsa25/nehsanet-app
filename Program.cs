@@ -1,14 +1,15 @@
 
 
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Swagger;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
 var  customOrigins = "_customOrigins";
 
 builder.Services.AddCors(options =>
