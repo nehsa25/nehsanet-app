@@ -17,9 +17,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: customOrigins,
                       policy  =>
                       {
-                          policy.WithOrigins("https://www.nehsa.net",
-                                              "http://localhost:4200");
+                          policy.WithOrigins("https://www.nehsa.net");
                       });
+
+    options.AddPolicy(name: customOrigins,
+                      policy  =>
+                      {
+                          policy.WithOrigins("http://localhost:4200");
+                      });     
 });
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
