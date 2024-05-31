@@ -2,6 +2,7 @@
 
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -10,6 +11,22 @@ using Swashbuckle.AspNetCore.Swagger;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var logger = LoggerFactory
+    .Create(loggingBuilder =>
+    {
+        // Copy all the current providers that was set within WebApplicationBuilder
+        foreach (var serviceDescriptor in builder.Logging.Services)
+            {
+            loggingBuilder.Services
+                .Add(serviceDescriptor);
+        }
+    })
+    .CreateLogger<Program>();
+;
+
+// Add services to the container.
+logger.LogInformation("Add services to the container...")
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConsole());
 var  customOrigins = "_customOrigins";
 
 builder.Services.AddCors(options =>
@@ -17,7 +34,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: customOrigins,
                       policy  =>
                       {
-                          policy.WithOrigins("https://www.nehsa.net");
+                          policy.WithOrigins("https://www.nehsa.net").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                       });
 
     // options.AddPolicy(name: customOrigins,
@@ -88,16 +105,10 @@ app.MapGet("/api/v1/swagger", [SwaggerOperation(
 .WithName("Swagger Documentation")
 .WithOpenApi();
 
-app.MapGet("/api/v1/adduser", [SwaggerOperation(
-        Summary = "Adds a new user to the system",
-        Description = "Adds a new user to the system")]
-        [SwaggerResponse(200, "Success")]
-        [SwaggerResponse(500, "An error occurred")] () =>
+app.MapPost("/api/v1/adduser", ([FromBody] string jsonstring) =>
 {
-    return JsonSerializer.Serialize<string>("User added.");
-})
-.WithName("Add User")
-.WithOpenApi();
+    return JsonSerializer.Serialize<string>("User added: " + jsonstring);
+});
 
 app.Run();
 
