@@ -25,7 +25,7 @@ var logger = LoggerFactory
 ;
 
 // Add services to the container.
-logger.LogInformation("Add services to the container...")
+logger.LogInformation("Add services to the container...");
 builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConsole());
 var  customOrigins = "_customOrigins";
 
@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var douglasAdamQuotes = new[]
+var quotes = new[]
 {
     "“You live and learn. At any rate, you live.” - Douglas Adams", 
     "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams", 
@@ -73,8 +73,8 @@ var douglasAdamQuotes = new[]
     "“Don't Panic.” - Douglas Adams", 
     "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams", 
     "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams", 
+    "“When the elevator tries to bring you down, go crazy!” - Prince"
 };
-
 
 app.MapGet("/api/v1/da", [SwaggerOperation(
         Summary = "Returns a single quote",
@@ -83,7 +83,7 @@ app.MapGet("/api/v1/da", [SwaggerOperation(
         [SwaggerResponse(500, "An error occurred")] () =>
 {
 
-    return JsonSerializer.Serialize<string>(douglasAdamQuotes[Random.Shared.Next(douglasAdamQuotes.Length)]);
+    return JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Length)]);
 })
 .WithName("DouglasAdamQuotes")
 .WithOpenApi();
