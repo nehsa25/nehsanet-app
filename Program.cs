@@ -22,7 +22,7 @@ internal class Program
             options.AddPolicy(name: localOrigin,
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:4200");
+                                  policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                               });
         });
 

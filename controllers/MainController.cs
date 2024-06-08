@@ -67,11 +67,11 @@ namespace Nehsa.Controllers
                     "Polka will never die!"
                 )
             );
-    }
+        }
 
-    readonly List<string> quotes =
-    [
-        "“You live and learn. At any rate, you live.” - Douglas Adams",
+        readonly List<string> quotes =
+        [
+            "“You live and learn. At any rate, you live.” - Douglas Adams",
         "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
         "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",
         "“The quality of any advice anybody has to offer has to be judged against the quality of life they actually lead.” - Douglas Adams",
@@ -84,40 +84,48 @@ namespace Nehsa.Controllers
         "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams",
         "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
         "“When the elevator tries to bring you down, go crazy!” - Prince"
-    ];
+        ];
 
 
-    [HttpGet]
-    [Route("/")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public string Get()
-    {
-        Trace.WriteLine("Hello, World!");
-        return "Hello, World!";
+        [HttpGet]
+        [Route("/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string Get()
+        {
+            Trace.WriteLine("Hello, World!");
+            return "Hello, World!";
+        }
+
+        [HttpGet]
+        [Route("/v1/name")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string GetName()
+        {
+            return JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
+        }
+
+        [HttpPost]
+        [Route("/v1/name")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string UpdateName(ContactMe contactMe)
+        {
+            return JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + contactMe);
+        }
+
+        [HttpGet]
+        [Route("/v1/quote")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string GetQuote()
+        {
+            return JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
+        }
+
+        [HttpPost]
+        [Route("/v1/contactme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string PostContactMe(ContactMe contactMe)
+        {
+            return JsonSerializer.Serialize<string>("Not Implemented but you send: " + contactMe);
+        }
     }
-
-    [HttpGet]
-    [Route("/v1/name")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public string GetName()
-    {
-        return JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
-    }
-
-    [HttpGet]
-    [Route("/v1/quote")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public string GetQuote()
-    {
-        return JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
-    }
-
-    [HttpPost]
-    [Route("/v1/contactme")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public string PostContactMe(ContactMe contactMe)
-    {
-        return JsonSerializer.Serialize<string>("Not Implemented but you send: " + contactMe);
-    }
-}
 }
