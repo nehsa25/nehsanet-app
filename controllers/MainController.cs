@@ -46,7 +46,7 @@ namespace Nehsa.Controllers
             names.Add(
                 new(
                     "Elodin",
-                    "You'll go to the Crockery if you're a raven!"
+                    "You'll go to the Crockery if YOU'RE A RAVEN!"
                 )
             );
             names.Add(
