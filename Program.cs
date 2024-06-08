@@ -109,7 +109,7 @@ app.MapGet("/v1/name", [SwaggerOperation(
 .WithName("RandomNames")
 .WithOpenApi();
 
-app.MapGet("/v1/da", [SwaggerOperation(
+app.MapGet("/v1/quote", [SwaggerOperation(
         Summary = "Returns a single quote",
         Description = "A random quote is returned.  Because.")]
         [SwaggerResponse(200, "Success")]
