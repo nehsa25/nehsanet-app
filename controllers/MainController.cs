@@ -28,7 +28,7 @@ namespace Nehsa.Controllers
             names.Add(
                 new(
                     "Sanya",
-                    "Weird Esperacchius with honor!"
+                    "Wield Esperacchius with honor!"
                 )
             );
             names.Add(
@@ -40,7 +40,7 @@ namespace Nehsa.Controllers
             names.Add(
                 new(
                     "Mab",
-                    "You keep your bargains."
+                    "You keep your bargains, My Queen."
                 )
             );
             names.Add(
