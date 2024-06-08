@@ -11,22 +11,7 @@ using Swashbuckle.AspNetCore.Swagger;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var logger = LoggerFactory
-    .Create(loggingBuilder =>
-    {
-        // Copy all the current providers that was set within WebApplicationBuilder
-        foreach (var serviceDescriptor in builder.Logging.Services)
-            {
-            loggingBuilder.Services
-                .Add(serviceDescriptor);
-        }
-    })
-    .CreateLogger<Program>();
-;
 
-// Add services to the container.
-logger.LogInformation("Add services to the container...");
-builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddConsole());
 var  customOrigins = "_customOrigins";
 
 builder.Services.AddCors(options =>
@@ -52,12 +37,48 @@ var app = builder.Build();
 app.UseCors(customOrigins);
 app.UseHttpsRedirection();
 app.UseSwagger();
-app.Services.SaveSwaggerJson();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwaggerUI();
+
+var names = new[]
 {
-    app.UseSwaggerUI();
-}
+    "Douglas",
+    "Bob",
+    "Kvothe",
+    "Denna",
+    "Bast",
+    "Cinder",
+    "Ambrose",
+    "Simmon",
+    "Wilem",
+    "Manet",
+    "Elodin",
+    "Auri",
+    "Devi",
+    "Fela",
+    "Mola",
+    "Hemme",
+    "Lorren",
+    "Kilvin",
+    "Herma",
+    "Kilvin",
+    "Erik",
+    "Ulysses",
+    "Dresden",
+    "Harry",
+    "Michael",
+    "Thomas",
+    "Murphy",
+    "Butters",
+    "Marcone",
+    "Mab",
+    "Lea",
+    "Lily",
+    "Sarissa",
+    "Molly",
+    "Sonya",
+    "Walther Borden",
+    "Marcone"
+};
 
 var quotes = new[]
 {
@@ -76,19 +97,31 @@ var quotes = new[]
     "“When the elevator tries to bring you down, go crazy!” - Prince"
 };
 
-app.MapGet("/api/v1/da", [SwaggerOperation(
+app.MapGet("/v1/name", [SwaggerOperation(
+        Summary = "Returns a random name",
+        Description = "A random name is returned.")]
+        [SwaggerResponse(200, "Success")]
+        [SwaggerResponse(500, "An error occurred")] () =>
+{
+
+    return JsonSerializer.Serialize<string>(names[Random.Shared.Next(names.Length)]);
+})
+.WithName("RandomNames")
+.WithOpenApi();
+
+app.MapGet("/v1/da", [SwaggerOperation(
         Summary = "Returns a single quote",
-        Description = "A random Douglas Adam quote is returned.  Because.")]
+        Description = "A random quote is returned.  Because.")]
         [SwaggerResponse(200, "Success")]
         [SwaggerResponse(500, "An error occurred")] () =>
 {
 
     return JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Length)]);
 })
-.WithName("DouglasAdamQuotes")
+.WithName("Quotes")
 .WithOpenApi();
 
-app.MapGet("/api/v1/swagger", [SwaggerOperation(
+app.MapGet("/v1/swagger", [SwaggerOperation(
         Summary = "Returns documentation",
         Description = "Returns Swagger documentation is raw JSON form")]
         [SwaggerResponse(200, "Success")]
@@ -105,20 +138,5 @@ app.MapGet("/api/v1/swagger", [SwaggerOperation(
 .WithName("Swagger Documentation")
 .WithOpenApi();
 
-app.MapPost("/api/v1/adduser", ([FromBody] string jsonstring) =>
-{
-    return JsonSerializer.Serialize<string>("User added: " + jsonstring);
-});
-
+// start app
 app.Run();
-
-public static class SwaggerExtensions
-{
-    public static void SaveSwaggerJson(this IServiceProvider provider)
-    {
-        ISwaggerProvider sw = provider.GetRequiredService<ISwaggerProvider>();
-        OpenApiDocument doc = sw.GetSwagger("v1", null, "/");
-        string swaggerFile = doc.SerializeAsJson(Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0);
-        File.WriteAllText("swagger.json", swaggerFile);
-    }
-}
