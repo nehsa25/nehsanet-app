@@ -9,7 +9,7 @@ internal class Program
     {
         IHost host = Host.CreateDefaultBuilder(args).Build();
         var logger = host.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogDebug("Host created.");
+        logger.LogInformation("Host created and logging enabled.");
         
         var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +48,7 @@ internal class Program
         app.UseCors(customOrigin);
         app.UseCors(localOrigin);
 
-        app.Logger.LogInformation("app.Environment.IsDevelopment(): " + app.Environment.IsDevelopment());
+        logger.LogInformation("app.Environment.IsDevelopment(): " + app.Environment.IsDevelopment());
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -61,10 +61,11 @@ internal class Program
         app.UseRouting();
         app.MapControllers();
         app.UseSwagger();
-        app.UseSwaggerUI();        
+        app.UseSwaggerUI();  
+        app.UseHealthChecks("/health");
 
         // start app
-        app.Logger.LogInformation("Starting App!");
+        logger.LogInformation("Starting Application!");
         app.Run();
     }
 }
