@@ -103,10 +103,10 @@ namespace Nehsa.Controllers
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string UpdateName(NameAbout namePerson)
+        public string UpdateName(NameType namePerson)
         {
             _logger.LogInformation("Enter: UpdateName() [POST]");
-            dynamic results = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson);
+            dynamic results = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson.Name);
             _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
             return results;
         }

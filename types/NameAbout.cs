@@ -4,4 +4,9 @@ namespace Nehsa.Controllers {
         public string Name { get; set; } = Name;
         public string About { get; set; } = About;
     }
+
+        public class NameType(string Name)
+    {
+        public string Name { get; set; } = Name;
+    }
 }
