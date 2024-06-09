@@ -18,7 +18,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
 
-EXPOSE 22007/tcp   
+EXPOSE 22007/tcp
 
 # Start the application
+# "dotnet nehsanet-app.dll --server.urls http://*/22007
 ENTRYPOINT ["dotnet", "nehsanet-app.dll","--server.urls","http://*/22007"]

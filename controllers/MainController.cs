@@ -9,10 +9,13 @@ namespace Nehsa.Controllers
     [Route("/")]
     public class Main : ControllerBase
     {
-        List<NamePerson> names = new();
+        private readonly ILogger _logger;
 
-        public Main()
+        List<NameAbout> names = new();
+
+        public Main(ILogger<Main> logger)
         {
+            _logger = logger;
             names.Add(
                 new(
                     "Kvothe",
@@ -92,8 +95,10 @@ namespace Nehsa.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string Get()
         {
-            Trace.WriteLine("Hello, World!");
-            return "Hello, World!";
+            _logger.LogInformation("Enter: Get()");
+            dynamic results = "Hello, World!";
+            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            return results;
         }
 
         [HttpGet]
@@ -101,15 +106,21 @@ namespace Nehsa.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetName()
         {
-            return JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
+            _logger.LogInformation("Enter: GetName() [GET]");
+            dynamic results = JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
+            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            return results;
         }
 
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string UpdateName(ContactMe contactMe)
+        public string UpdateName(NameAbout namePerson)
         {
-            return JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + contactMe);
+            _logger.LogInformation("Enter: UpdateName() [POST]");
+            dynamic results = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson);
+            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            return results;
         }
 
         [HttpGet]
@@ -117,7 +128,10 @@ namespace Nehsa.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetQuote()
         {
-            return JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
+            _logger.LogInformation("Enter: GetQuote()");
+            dynamic results = JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
+            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            return results;
         }
 
         [HttpPost]
@@ -125,7 +139,10 @@ namespace Nehsa.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string PostContactMe(ContactMe contactMe)
         {
-            return JsonSerializer.Serialize<string>("Not Implemented but you send: " + contactMe);
+            _logger.LogInformation("Enter: PostContactMe()");
+            dynamic results = JsonSerializer.Serialize<string>("Not Implemented but you send: " + contactMe);
+            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            return results;
         }
     }
 }

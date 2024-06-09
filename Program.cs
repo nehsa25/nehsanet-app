@@ -1,12 +1,22 @@
 
 
 using System.Diagnostics;
+using Microsoft.Extensions.Logging.Console;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        IHost host = Host.CreateDefaultBuilder(args).Build();
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogDebug("Host created.");
+        
         var builder = WebApplication.CreateBuilder(args);
+
+        // Logging support
+        builder.Logging.ClearProviders();
+        builder.Logging.AddConsole();
+        builder.Logging.AddDebug();
 
         // CORS support
         var customOrigin = "mainOrigin";
@@ -31,13 +41,14 @@ internal class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddHealthChecks();
         builder.Services.AddControllers();
+        builder.Services.AddLogging();
         
         // Setup final app to run
         var app = builder.Build();
         app.UseCors(customOrigin);
         app.UseCors(localOrigin);
 
-        Trace.WriteLine("app.Environment.IsDevelopment(): " + app.Environment.IsDevelopment());
+        app.Logger.LogInformation("app.Environment.IsDevelopment(): " + app.Environment.IsDevelopment());
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -53,6 +64,7 @@ internal class Program
         app.UseSwaggerUI();        
 
         // start app
+        app.Logger.LogInformation("Starting App!");
         app.Run();
     }
 }
