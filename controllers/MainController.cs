@@ -107,7 +107,7 @@ namespace Nehsa.Controllers
             names.Add(new("May", ""));
             names.Add(new("Sally", ""));
             names.Add(new("Candie", ""));
-            names.Add(new("Jesse", ""));
+            names.Add(new("Jesse", "YOU'RE ME!"));
             names.Add(new("Ethan", ""));
         }
         readonly List<string> quotes =
