@@ -64,12 +64,22 @@ namespace Nehsa.Controllers
                     "Howl!"
                 )
             );
-            names.Add(
-                new(
-                    "Butters",
-                    "Polka will never die!"
-                )
-            );
+            names.Add(new("Butters", "Polka will never die!"));
+            names.Add(new("Joe", ""));
+            names.Add(new("Emma", ""));
+            names.Add(new("Isabella", ""));
+            names.Add(new("Akari", ""));
+            names.Add(new("Gorg", ""));
+            names.Add(new("Jobe", ""));
+            names.Add(new("Tom", ""));
+            names.Add(new("Shane", ""));
+            names.Add(new("Shuri", ""));
+            names.Add(new("Thomas", ""));
+            names.Add(new("Daphne", ""));
+            names.Add(new("Felicity", ""));
+            names.Add(new("Bonnie", ""));
+            names.Add(new("Tabs", ""));
+            names.Add(new("Dot", ""));
         }
 
         readonly List<string> quotes =
@@ -89,6 +99,48 @@ namespace Nehsa.Controllers
         "“When the elevator tries to bring you down, go crazy!” - Prince"
         ];
 
+
+        readonly List<string> positiveaffirmations =
+        [
+            "Generous",
+            "Loyal",
+            "Humorous",
+            "Adventurous",
+            "Affable",
+            "Amicable",
+            "Cheerful",
+            "Considerate",
+            "Diligent",
+            "Empathy",
+            "Helpful",
+            "Adaptable",
+            "Amazing",
+            "Ambitious",
+            "Bright",
+            "Courageous",
+            "Creative",
+            "Intuitional",
+            "Passionate",
+            "Sincere",
+            "Wise",
+            "Neighborhood Rollerblader",
+            "Developer",
+            "Student",
+            "Father", 
+            "Ambitious", 
+            "Homo Sapien", 
+            "Tester", 
+            "Game-Player",
+            "<a href='https://mud.nehsa.net'>Game-Maker</a>",  
+            "SDET", 
+            "Husband", 
+            "Adventurous", 
+            "Nice", 
+            "Skier", 
+            "Book-Reader",
+            "Learner"
+        ];
+
         [HttpGet]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -98,6 +150,30 @@ namespace Nehsa.Controllers
             dynamic results = JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
             _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
             return results;
+        }
+
+        [HttpGet]
+        [Route("/v1/positiveadjective")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string GetPositiveAdjective()
+        {
+            _logger.LogInformation("Enter: GetPositiveAdjective() [GET]");
+            int numToReturn = 15;
+            int founditems = 0;
+            string results = "";
+            List<string> items = [];
+            while (founditems < numToReturn) {
+                string item = positiveaffirmations[Random.Shared.Next(positiveaffirmations.Count)];
+                if (!items.Contains(item)) {
+                    items.Add(item);
+                    founditems++;
+                }
+            }
+            results = string.Join(", ", items);
+            results +=  ". A Jack-of-all-trades, smorgasbord of a human (like everyone else).";
+            dynamic jsonresults = JsonSerializer.Serialize(results);
+            _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
+            return jsonresults;
         }
 
         [HttpPost]
