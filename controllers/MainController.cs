@@ -131,7 +131,7 @@ namespace Nehsa.Controllers
             "Homo Sapien", 
             "Tester", 
             "Game-Player",
-            "<a href='https://mud.nehsa.net'>Game-Maker</a>",  
+            "<a href='https://www.nehsa.net/mud'>Game-Maker</a>",  
             "SDET", 
             "Husband", 
             "Adventurous", 
