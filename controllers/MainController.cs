@@ -80,8 +80,36 @@ namespace Nehsa.Controllers
             names.Add(new("Bonnie", ""));
             names.Add(new("Tabs", ""));
             names.Add(new("Dot", ""));
+            names.Add(new("Ambrose", ""));
+            names.Add(new("Crossen", ""));
+            names.Add(new("Dunstan", ""));
+            names.Add(new("Bink", ""));
+            names.Add(new("Ivar", ""));
+            names.Add(new("Ivan", ""));
+            names.Add(new("Beatrice",""));
+            names.Add(new("Subaru", ""));
+            names.Add(new("Roswaal", ""));
+            names.Add(new("Ashen", ""));
+            names.Add(new("Sigrid", ""));
+            names.Add(new("Renkath", ""));
+            names.Add(new("Kelsek", ""));
+            names.Add(new("Ash", ""));
+            names.Add(new("Jay", ""));
+            names.Add(new("Bob", ""));
+            names.Add(new("Fred", ""));
+            names.Add(new("Mike", ""));
+            names.Add(new("James", ""));
+            names.Add(new("Jones", ""));
+            names.Add(new("Tim", ""));
+            names.Add(new("Timm", ""));
+            names.Add(new("John", ""));
+            names.Add(new("Jack", ""));
+            names.Add(new("May", ""));
+            names.Add(new("Sally", ""));
+            names.Add(new("Candie", ""));
+            names.Add(new("Jesse", ""));
+            names.Add(new("Ethan", ""));
         }
-
         readonly List<string> quotes =
         [
             "“You live and learn. At any rate, you live.” - Douglas Adams",
@@ -126,17 +154,17 @@ namespace Nehsa.Controllers
             "Neighborhood Rollerblader",
             "Developer",
             "Student",
-            "Father", 
-            "Ambitious", 
-            "Homo Sapien", 
-            "Tester", 
+            "Father",
+            "Ambitious",
+            "Homo Sapien",
+            "Tester",
             "Game-Player",
-            "<a href='https://www.nehsa.net/mud'>Game-Maker</a>",  
-            "SDET", 
-            "Husband", 
-            "Adventurous", 
-            "Nice", 
-            "Skier", 
+            "<a routerLink='/mud'>Game-Maker</a>",
+            "SDET",
+            "Husband",
+            "Adventurous",
+            "Nice",
+            "Skier",
             "Book-Reader",
             "Learner"
         ];
@@ -162,15 +190,17 @@ namespace Nehsa.Controllers
             int founditems = 0;
             string results = "";
             List<string> items = [];
-            while (founditems < numToReturn) {
+            while (founditems < numToReturn)
+            {
                 string item = positiveaffirmations[Random.Shared.Next(positiveaffirmations.Count)];
-                if (!items.Contains(item)) {
+                if (!items.Contains(item))
+                {
                     items.Add(item);
                     founditems++;
                 }
             }
             results = string.Join(", ", items);
-            results +=  ". A Jack-of-all-trades, smorgasbord of a human (like everyone else).";
+            results += ". A Jack-of-all-trades, smorgasbord of a human (like everyone else).";
             dynamic jsonresults = JsonSerializer.Serialize(results);
             _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
             return jsonresults;
