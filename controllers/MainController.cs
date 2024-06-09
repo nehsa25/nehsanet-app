@@ -89,18 +89,6 @@ namespace Nehsa.Controllers
         "“When the elevator tries to bring you down, go crazy!” - Prince"
         ];
 
-
-        [HttpGet]
-        [Route("/")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public string Get()
-        {
-            _logger.LogInformation("Enter: Get()");
-            dynamic results = "Hello, World!";
-            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
-            return results;
-        }
-
         [HttpGet]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
