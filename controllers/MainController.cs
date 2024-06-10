@@ -86,7 +86,7 @@ namespace Nehsa.Controllers
             names.Add(new("Bink", ""));
             names.Add(new("Ivar", ""));
             names.Add(new("Ivan", ""));
-            names.Add(new("Beatrice",""));
+            names.Add(new("Beatrice","Subaru Subaru Subaru!"));
             names.Add(new("Subaru", ""));
             names.Add(new("Roswaal", ""));
             names.Add(new("Ashen", ""));
@@ -107,7 +107,7 @@ namespace Nehsa.Controllers
             names.Add(new("May", ""));
             names.Add(new("Sally", ""));
             names.Add(new("Candie", ""));
-            names.Add(new("Jesse", "YOU'RE ME!"));
+            names.Add(new("Jesse", "YOU ARE ME! AM I YOU?"));
             names.Add(new("Ethan", ""));
         }
         readonly List<string> quotes =
