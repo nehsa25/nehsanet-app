@@ -139,10 +139,11 @@ namespace Nehsa.Controllers
             "Cheerful",
             "Considerate",
             "Diligent",
-            "Empathy",
+            "Optimistic",
+            "Empathetic",
             "Helpful",
             "Adaptable",
-            "Amazing",
+            "Amazing :)",
             "Ambitious",
             "Bright",
             "Courageous",
@@ -166,7 +167,8 @@ namespace Nehsa.Controllers
             "Nice",
             "Skier",
             "Book-Reader",
-            "Learner"
+            "Learner",
+            "Synth Rider"
         ];
 
         [HttpGet]
@@ -200,7 +202,7 @@ namespace Nehsa.Controllers
                 }
             }
             results = string.Join(", ", items);
-            results += ". A Jack-of-all-trades, smorgasbord of a human (like everyone else).";
+            results += ". A jack-of-all-trades, smorgasbord of a human (like everyone else).";
             dynamic jsonresults = JsonSerializer.Serialize(results);
             _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
             return jsonresults;
