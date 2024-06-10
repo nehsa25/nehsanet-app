@@ -183,6 +183,28 @@ namespace Nehsa.Controllers
         }
 
         [HttpGet]
+        [Route("/v1/name/{numToReturn}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string GetNames(int numToReturn)
+        {
+            _logger.LogInformation("Enter: names() [GET]");
+            int founditems = 0;
+            List<dynamic> items = [];
+            while (founditems < numToReturn)
+            {
+                dynamic item = names[Random.Shared.Next(names.Count)];
+                if (!items.Contains(item))
+                {
+                    items.Add(item);
+                    founditems++;
+                }
+            }
+            dynamic jsonresults = JsonSerializer.Serialize(items);
+            _logger.LogInformation($"Exit: names(): results: ${jsonresults}");
+            return jsonresults;
+        }
+
+        [HttpGet]
         [Route("/v1/positiveadjective")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetPositiveAdjective()
