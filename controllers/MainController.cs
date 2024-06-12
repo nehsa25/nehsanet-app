@@ -168,7 +168,7 @@ namespace Nehsa.Controllers
             "Skier",
             "Book-Reader",
             "Learner",
-            "Synth Rider"
+            "<a href=\"https://synthridersvr.com/\">Synth-Rider</a>"
         ];
 
         [HttpGet]
