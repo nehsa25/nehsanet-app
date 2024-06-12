@@ -51,3 +51,4 @@ nehsanet/
 obj/
 bin/
 https/api.nehsa.net.pfx
+run-api.ps1
