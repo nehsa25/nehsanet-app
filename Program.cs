@@ -63,6 +63,7 @@ internal class Program
         app.UseSwagger();
         app.UseSwaggerUI();  
         app.UseHealthChecks("/health");
+        app.UseStaticFiles(); // allow us to serve map images
 
         // start app
         logger.LogInformation("Starting Application!");
