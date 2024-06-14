@@ -70,7 +70,6 @@ namespace Nehsa.Controllers
             names.Add(new("Isabella", ""));
             names.Add(new("Akari", ""));
             names.Add(new("Gorg", ""));
-            names.Add(new("Jobe", ""));
             names.Add(new("Tom", ""));
             names.Add(new("Shane", ""));
             names.Add(new("Shuri", ""));
@@ -113,18 +112,18 @@ namespace Nehsa.Controllers
         readonly List<string> quotes =
         [
             "“You live and learn. At any rate, you live.” - Douglas Adams",
-        "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
-        "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",
-        "“The quality of any advice anybody has to offer has to be judged against the quality of life they actually lead.” - Douglas Adams",
-        "“I refuse to answer that question on the grounds that I don't know the answer.” - Douglas Adams",
-        "“I love deadlines. I love the whooshing noise they make as they go by.” - Douglas Adams",
-        "“Anything that thinks logically can be fooled by something else that thinks at least as logically as it does.” - Douglas Adams",
-        "“Time is an illusion. Lunchtime doubly so” - Douglas Adams",
-        "“Life is wasted on the living.” - Douglas Adams",
-        "“Don't Panic.” - Douglas Adams",
-        "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams",
-        "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
-        "“When the elevator tries to bring you down, go crazy!” - Prince"
+            "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
+            "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",
+            "“The quality of any advice anybody has to offer has to be judged against the quality of life they actually lead.” - Douglas Adams",
+            "“I refuse to answer that question on the grounds that I don't know the answer.” - Douglas Adams",
+            "“I love deadlines. I love the whooshing noise they make as they go by.” - Douglas Adams",
+            "“Anything that thinks logically can be fooled by something else that thinks at least as logically as it does.” - Douglas Adams",
+            "“Time is an illusion. Lunchtime doubly so” - Douglas Adams",
+            "“Life is wasted on the living.” - Douglas Adams",
+            "“Don't Panic.” - Douglas Adams",
+            "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams",
+            "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
+            "“When the elevator tries to bring you down, go crazy!” - Prince"
         ];
 
 
