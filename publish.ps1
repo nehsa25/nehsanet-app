@@ -10,7 +10,7 @@ if ($val.ToLower() -eq 'both' -or $val.ToLower() -eq 'api') {
     write-host "Getting API ready...";
     write-host "Building docker API image ${build}";
     docker build . -t nehsa/nehsaapi:$build --platform linux/amd64;
-    $cmd = "docker run -it -p 22007:22007 -e ASPNETCORE_URLS='https://+:22007' -e ASPNETCORE_HTTPS_PORT=22007 -e ASPNETCORE_Kestrel__Certificates__Default__Password='password' -e ASPNETCORE_Kestrel__Certificates__Default__Path='/https/api.nehsa.net.pfx'  -v C:\certs:/https/ nehsa/nehsaapi:${build}";
+    $cmd = "docker run -it -p 22007:22007 -e ASPNETCORE_URLS='https://+:22007' -e ASPNETCORE_HTTPS_PORT=22007 -e ASPNETCORE_Kestrel__Certificates__Default__Password='password' -e ASPNETCORE_Kestrel__Certificates__Default__Path='/https/api.nehsa.net.pfx'  -v C:\certs:/https/ -v C:\src\mud_images:/app/wwwroot/ nehsa/nehsaapi:${build}";
     write-host 'To run:';
     write-host $cmd;
 
