@@ -123,7 +123,8 @@ namespace Nehsa.Controllers
             "“Don't Panic.” - Douglas Adams",
             "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams",
             "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
-            "“When the elevator tries to bring you down, go crazy!” - Prince"
+            "“When the elevator tries to bring you down, go crazy!” - Prince",
+            "“I get knocked down, but I get up again.” - Chumbawamba"
         ];
 
 
