@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="MySqlConnector.DependencyInjection" Version="2.3.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
         <None Update="appsettings.json">

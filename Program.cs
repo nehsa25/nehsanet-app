@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging.Console;
+using MySqlConnector;
 
 internal class Program
 {
@@ -42,6 +43,9 @@ internal class Program
         builder.Services.AddHealthChecks();
         builder.Services.AddControllers();
         builder.Services.AddLogging();
+
+        // MySQL support
+        builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
         
         // Setup final app to run
         var app = builder.Build();

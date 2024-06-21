@@ -1,4 +1,4 @@
-namespace Nehsa.Controllers {
+namespace nehsanet_app.Types {
     public class ContactMe
     {
         public required string Name { get; set; }

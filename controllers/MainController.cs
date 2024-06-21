@@ -2,8 +2,12 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.ObjectPool;
+using MySqlConnector;
+using nehsanet_app.Models;
+using nehsanet_app.Types;
 
-namespace Nehsa.Controllers
+namespace nehsanet_app.Controllers
 {
     [ApiController]
     [Route("/")]
@@ -85,7 +89,7 @@ namespace Nehsa.Controllers
             names.Add(new("Bink", ""));
             names.Add(new("Ivar", ""));
             names.Add(new("Ivan", ""));
-            names.Add(new("Beatrice","Subaru Subaru Subaru!"));
+            names.Add(new("Beatrice", "Subaru Subaru Subaru!"));
             names.Add(new("Subaru", ""));
             names.Add(new("Roswaal", ""));
             names.Add(new("Ashen", ""));
@@ -109,6 +113,7 @@ namespace Nehsa.Controllers
             names.Add(new("Jesse", "YOU ARE ME! AM I YOU?"));
             names.Add(new("Ethan", ""));
         }
+
         readonly List<string> quotes =
         [
             "“You live and learn. At any rate, you live.” - Douglas Adams",
@@ -126,7 +131,6 @@ namespace Nehsa.Controllers
             "“When the elevator tries to bring you down, go crazy!” - Prince",
             "“I get knocked down, but I get up again.” - Chumbawamba"
         ];
-
 
         readonly List<string> positiveaffirmations =
         [
@@ -252,14 +256,42 @@ namespace Nehsa.Controllers
             return results;
         }
 
-        [HttpPost]
-        [Route("/v1/contactme")]
+        [HttpGet]
+        [Route("/v1/comment/{commentid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string PostContactMe(ContactMe contactMe)
+        public async Task<string> GetComment([FromServices] MySqlDataSource db, int commentid)
         {
-            _logger.LogInformation("Enter: PostContactMe()");
-            dynamic results = JsonSerializer.Serialize<string>("Not Implemented but you send: " + contactMe);
-            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            _logger?.LogInformation("Enter: GetComment/id [GET]");
+            var connection = new CommentsRepository(db, _logger);
+            var db_result = await connection.GetSingleComment(commentid);
+            dynamic results = JsonSerializer.Serialize(db_result);
+            _logger?.LogInformation($"Exit: GetComment/id: results: ${results}");
+            return results;
+        }
+
+        [HttpPost]
+        [Route("/v1/comment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> PostComment([FromServices] MySqlDataSource db, [FromBody] CommentPost commentPost)
+        {
+            _logger?.LogInformation("Enter: PostComment [POST]");
+            var connection = new CommentsRepository(db, _logger);
+            await connection.AddComment(commentPost);
+            dynamic results = JsonSerializer.Serialize<string>("OK");
+            _logger?.LogInformation($"Exit: PostComment: results: ${results}");
+            return results;
+        }
+  
+        [HttpGet]
+        [Route("/v1/dbhealth")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> GetDBHealth([FromServices] MySqlDataSource db)
+        {
+            _logger?.LogInformation("Enter: GetDBHealth()");
+            var connection = new CommentsRepository(db, _logger);
+            var db_result = await connection.GetLast10Comments();
+            dynamic results = JsonSerializer.Serialize(db_result);
+            _logger?.LogInformation($"Exit: GetDBHealth(): results: ${JsonSerializer.Serialize(results)}");
             return results;
         }
     }
