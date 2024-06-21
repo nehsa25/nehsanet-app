@@ -52,3 +52,5 @@ obj/
 bin/
 https/api.nehsa.net.pfx
 run-api.ps1
+appsettings.json
+appsettings.json
