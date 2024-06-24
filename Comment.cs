@@ -4,7 +4,7 @@ using nehsanet_app.Models;
 
 public class CommentsRepository(MySqlDataSource database, ILogger? _logger = null)
 {
-    public async Task<CommentPost?> GetSingleComment(int commentid)
+    public async Task<CommentPost?> GetSingleCommentById(int commentid)
     {
         _logger?.LogInformation("Enter: GetComment/id [GET]");
         using var connection = await database.OpenConnectionAsync();
@@ -36,30 +36,27 @@ public class CommentsRepository(MySqlDataSource database, ILogger? _logger = nul
     {
         using var connection = await database.OpenConnectionAsync();
         using var command = connection.CreateCommand();
-        command.CommandText = @"INSERT INTO `comments` (`username`, `comment`) VALUES (@title, @content);";
+        command.CommandText = @"INSERT INTO `comments` (`username`, `comment`, `ip_address`, `date`, `page`) VALUES (@username, @comment, @ip_address, @date, @page);";
         BindParams(command, CommentPost);
-        await command.ExecuteNonQueryAsync();
-        CommentPost.commentid = (int)command.LastInsertedId;
-    }
-
-    public async Task UpdateComment(CommentPost CommentPost)
-    {
-        using var connection = await database.OpenConnectionAsync();
-        using var command = connection.CreateCommand();
-        command.CommandText = @"UPDATE `comments` SET `username` = @username, `comment` = @comment WHERE `commentid` = @commentid;";
-        BindParams(command, CommentPost);
-        BindId(command, CommentPost);
         await command.ExecuteNonQueryAsync();
     }
 
-    public async Task DeleteComment(CommentPost CommentPost)
-    {
-        using var connection = await database.OpenConnectionAsync();
-        using var command = connection.CreateCommand();
-        command.CommandText = @"DELETE FROM `comments` WHERE `commentid` = @commentid;";
-        BindId(command, CommentPost);
-        await command.ExecuteNonQueryAsync();
-    }
+    // public async Task UpdateComment(CommentPost CommentPost)
+    // {
+    //     using var connection = await database.OpenConnectionAsync();
+    //     using var command = connection.CreateCommand();
+    //     command.CommandText = @"UPDATE `comments` SET `username` = @username, `comment` = @comment WHERE `commentid` = @commentid;";
+    //     BindParams(command, CommentPost);
+    //     await command.ExecuteNonQueryAsync();
+    // }
+
+    // public async Task DeleteComment(CommentPost CommentPost)
+    // {
+    //     using var connection = await database.OpenConnectionAsync();
+    //     using var command = connection.CreateCommand();
+    //     command.CommandText = @"DELETE FROM `comments` WHERE `commentid` = @commentid;";
+    //     await command.ExecuteNonQueryAsync();
+    // }
 
     private static async Task<IReadOnlyList<CommentPost>> GetComments(DbDataReader reader)
     {
@@ -71,21 +68,20 @@ public class CommentsRepository(MySqlDataSource database, ILogger? _logger = nul
                 int commentid = reader.GetInt32(0);
                 string username = reader.GetString(1);
                 string comment = reader.GetString(2);
-                var post = new CommentPost(commentid, username, comment);
+                string page = reader.GetString(3);
+                var post = new CommentPost(username, comment, page, commentid: commentid);
                 posts.Add(post);
             }
         }
         return posts;
     }
 
-    private static void BindId(MySqlCommand cmd, CommentPost CommentPost)
-    {
-        cmd.Parameters.AddWithValue("@commentid", CommentPost.commentid);
-    }
-
     private static void BindParams(MySqlCommand cmd, CommentPost CommentPost)
     {
-        cmd.Parameters.AddWithValue("@username", CommentPost.username);
-        cmd.Parameters.AddWithValue("@comment", CommentPost.comment);
+        cmd.Parameters.AddWithValue("@username", CommentPost.Username);
+        cmd.Parameters.AddWithValue("@comment", CommentPost.Comment);
+        cmd.Parameters.AddWithValue("@page", CommentPost.Page);
+        cmd.Parameters.AddWithValue("@date", CommentPost.CreationDate);
+        cmd.Parameters.AddWithValue("@ip_address", CommentPost.Ip);
     }
 }

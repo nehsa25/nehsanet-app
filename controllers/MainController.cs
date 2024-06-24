@@ -147,7 +147,6 @@ namespace nehsanet_app.Controllers
             "Empathetic",
             "Helpful",
             "Adaptable",
-            "Amazing :)",
             "Ambitious",
             "Bright",
             "Courageous",
@@ -263,7 +262,7 @@ namespace nehsanet_app.Controllers
         {
             _logger?.LogInformation("Enter: GetComment/id [GET]");
             var connection = new CommentsRepository(db, _logger);
-            var db_result = await connection.GetSingleComment(commentid);
+            var db_result = await connection.GetSingleCommentById(commentid);
             dynamic results = JsonSerializer.Serialize(db_result);
             _logger?.LogInformation($"Exit: GetComment/id: results: ${results}");
             return results;
@@ -276,6 +275,8 @@ namespace nehsanet_app.Controllers
         {
             _logger?.LogInformation("Enter: PostComment [POST]");
             var connection = new CommentsRepository(db, _logger);
+            if (HttpContext.Connection.RemoteIpAddress != null)
+                commentPost.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
             await connection.AddComment(commentPost);
             dynamic results = JsonSerializer.Serialize<string>("OK");
             _logger?.LogInformation($"Exit: PostComment: results: ${results}");

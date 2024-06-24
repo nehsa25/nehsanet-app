@@ -2,16 +2,21 @@ namespace nehsanet_app.Models
 {
     public class CommentPost
     {
-        public int commentid { get; set; }
-        public string username { get; set; }
-        public string comment { get; set; }
-        public DateTime date { get; set; }
+        public int? CommentId { get; set; }
+        public string Username { get; set; }
+        public string Comment { get; set; }
+        public string Page { get; set; }
+         public string Ip { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        public CommentPost(int commentid, string username, string comment)
+        public CommentPost(string username, string comment, string page, int? commentid=null)
         {
-            this.commentid = commentid;
-            this.username = username;
-            this.comment = comment;
+            this.Username = username;
+            this.Comment = comment;
+            this.Page = page;
+            this.Ip = "";
+            this.CreationDate = DateTime.Now;
+
         }
 
     }
