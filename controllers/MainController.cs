@@ -256,13 +256,13 @@ namespace nehsanet_app.Controllers
         }
 
         [HttpGet]
-        [Route("/v1/comment/{commentid}")]
+        [Route("/v1/comment/{page}/{numberToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> GetComment([FromServices] MySqlDataSource db, int commentid)
+        public async Task<string> GetComment([FromServices] MySqlDataSource db, string page, int numberToReturn=5)
         {
             _logger?.LogInformation("Enter: GetComment/id [GET]");
             var connection = new CommentsRepository(db, _logger);
-            var db_result = await connection.GetSingleCommentById(commentid);
+            List<CommentPost> db_result = (List<CommentPost>)await connection.GetLastXCommentsByPage(page, numberToReturn);
             dynamic results = JsonSerializer.Serialize(db_result);
             _logger?.LogInformation($"Exit: GetComment/id: results: ${results}");
             return results;
@@ -276,7 +276,7 @@ namespace nehsanet_app.Controllers
             _logger?.LogInformation("Enter: PostComment [POST]");
             var connection = new CommentsRepository(db, _logger);
             if (HttpContext.Connection.RemoteIpAddress != null)
-                commentPost.Ip = HttpContext.Connection.RemoteIpAddress.ToString();
+                commentPost.ip = HttpContext.Connection.RemoteIpAddress.ToString();
             await connection.AddComment(commentPost);
             dynamic results = JsonSerializer.Serialize<string>("OK");
             _logger?.LogInformation($"Exit: PostComment: results: ${results}");
@@ -290,7 +290,7 @@ namespace nehsanet_app.Controllers
         {
             _logger?.LogInformation("Enter: GetDBHealth()");
             var connection = new CommentsRepository(db, _logger);
-            var db_result = await connection.GetLast10Comments();
+            var db_result = await connection.GetLastXCommentsByPage("this_website", 1);
             dynamic results = JsonSerializer.Serialize(db_result);
             _logger?.LogInformation($"Exit: GetDBHealth(): results: ${JsonSerializer.Serialize(results)}");
             return results;

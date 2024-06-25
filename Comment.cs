@@ -16,11 +16,11 @@ public class CommentsRepository(MySqlDataSource database, ILogger? _logger = nul
         return result.FirstOrDefault();
     }
 
-    public async Task<IReadOnlyList<CommentPost>> GetLast10Comments()
+    public async Task<IReadOnlyList<CommentPost>> GetLastXCommentsByPage(string page, int numberToReturn)
     {
         using var connection = await database.OpenConnectionAsync();
         using var command = connection.CreateCommand();
-        command.CommandText = @"SELECT `commentid`, `username`, `comment` FROM `comments` ORDER BY `commentid` DESC LIMIT 10;";
+        command.CommandText = $"SELECT `commentid`, `username`, `comment` FROM `comments` WHERE page = '{page}' ORDER BY `commentid` DESC LIMIT {numberToReturn};";
         return await GetComments(await command.ExecuteReaderAsync());
     }
 
@@ -68,8 +68,7 @@ public class CommentsRepository(MySqlDataSource database, ILogger? _logger = nul
                 int commentid = reader.GetInt32(0);
                 string username = reader.GetString(1);
                 string comment = reader.GetString(2);
-                string page = reader.GetString(3);
-                var post = new CommentPost(username, comment, page, commentid: commentid);
+                var post = new CommentPost(username, comment, commentid: commentid, page: "");
                 posts.Add(post);
             }
         }
@@ -78,10 +77,10 @@ public class CommentsRepository(MySqlDataSource database, ILogger? _logger = nul
 
     private static void BindParams(MySqlCommand cmd, CommentPost CommentPost)
     {
-        cmd.Parameters.AddWithValue("@username", CommentPost.Username);
-        cmd.Parameters.AddWithValue("@comment", CommentPost.Comment);
-        cmd.Parameters.AddWithValue("@page", CommentPost.Page);
-        cmd.Parameters.AddWithValue("@date", CommentPost.CreationDate);
-        cmd.Parameters.AddWithValue("@ip_address", CommentPost.Ip);
+        cmd.Parameters.AddWithValue("@username", CommentPost.username);
+        cmd.Parameters.AddWithValue("@comment", CommentPost.comment);
+        cmd.Parameters.AddWithValue("@page", CommentPost.page);
+        cmd.Parameters.AddWithValue("@date", CommentPost.date);
+        cmd.Parameters.AddWithValue("@ip_address", CommentPost.ip);
     }
 }
