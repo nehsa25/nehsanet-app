@@ -68,7 +68,7 @@ namespace nehsanet_app.Controllers
                     "Howl!"
                 )
             );
-            names.Add(new("Butters", "Polka will never die!"));
+            names.Add(new("Butters", "POLKA will never die!"));
             names.Add(new("Joe", ""));
             names.Add(new("Emma", ""));
             names.Add(new("Isabella", ""));
@@ -105,6 +105,7 @@ namespace nehsanet_app.Controllers
             names.Add(new("Jones", ""));
             names.Add(new("Tim", ""));
             names.Add(new("Timm", ""));
+            names.Add(new("Harry", "The Burger King!"));
             names.Add(new("John", ""));
             names.Add(new("Jack", ""));
             names.Add(new("May", ""));
@@ -129,7 +130,9 @@ namespace nehsanet_app.Controllers
             "“Don't believe anything you read on the net. Except this. Well, including this, I suppose.” - Douglas Adams",
             "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
             "“When the elevator tries to bring you down, go crazy!” - Prince",
-            "“I get knocked down, but I get up again.” - Chumbawamba"
+            "“I get knocked down, but I get up again.” - Chumbawamba",
+            "“But just because you're paranoid doesn't mean there isn't an invisible demon about to eat your face.” - Harry Dresden",
+            "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
         ];
 
         readonly List<string> positiveaffirmations =
