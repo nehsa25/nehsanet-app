@@ -40,8 +40,8 @@ namespace nehsanet_app.Controllers
             );
             names.Add(
                 new(
-                    "Maxiumus",
-                    "You're my cat."
+                    "Maximus",
+                    "You're my cat. I love you."
                 )
             );
             names.Add(
