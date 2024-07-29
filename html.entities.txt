@@ -8,3 +8,6 @@
 &#x2228; logic down
 &#xac; logic not
 &deg; degree symb
+&ouml; ö
+&aring; å
+Sm&ouml;rg&aring;sbord

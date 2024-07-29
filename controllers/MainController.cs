@@ -159,6 +159,7 @@ namespace nehsanet_app.Controllers
             "Passionate",
             "Sincere",
             "Wise",
+            "Tent Camper (someday pop-up ten camper)",
             "Neighborhood Rollerblader",
             "Developer",
             "Student",
@@ -167,7 +168,7 @@ namespace nehsanet_app.Controllers
             "Homo Sapien",
             "Tester",
             "Game-Player",
-            "<a routerLink='/mud'>Game-Maker</a>",
+            "Game-Maker",
             "SDET",
             "Husband",
             "Adventurous",
@@ -175,7 +176,7 @@ namespace nehsanet_app.Controllers
             "Skier",
             "Book-Reader",
             "Learner",
-            "<a href=\"https://synthridersvr.com/\">Synth-Rider</a>"
+            "a <a href=\"https://synthridersvr.com/\">Synth-Rider</a>"
         ];
 
         [HttpGet]
@@ -231,7 +232,7 @@ namespace nehsanet_app.Controllers
                 }
             }
             results = string.Join(", ", items);
-            results += ". A jack-of-all-trades, smorgasbord of a human (like everyone else).";
+            results += ". A sm&ouml;rg&aring;sbord of a human (like everyone else).";
             dynamic jsonresults = JsonSerializer.Serialize(results);
             _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
             return jsonresults;
