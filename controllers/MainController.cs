@@ -159,7 +159,7 @@ namespace nehsanet_app.Controllers
             "Passionate",
             "Sincere",
             "Wise",
-            "Tent Camper (someday pop-up ten camper)",
+            "Tent Camper (someday pop-up tent camper!)",
             "Neighborhood Rollerblader",
             "Developer",
             "Student",
