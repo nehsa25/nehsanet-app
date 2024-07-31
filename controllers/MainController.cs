@@ -232,7 +232,7 @@ namespace nehsanet_app.Controllers
                 }
             }
             results = string.Join(", ", items);
-            results += ". A sm&ouml;rg&aring;sbord of a human (like everyone else).";
+            results += ". A sm&ouml;rg&aring;sbord of a human!";
             dynamic jsonresults = JsonSerializer.Serialize(results);
             _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
             return jsonresults;
