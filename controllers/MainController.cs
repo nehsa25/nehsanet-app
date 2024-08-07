@@ -134,6 +134,7 @@ namespace nehsanet_app.Controllers
             "“But just because you're paranoid doesn't mean there isn't an invisible demon about to eat your face.” - Harry Dresden",
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
             "“May the swamp be gentle.” - Google Gemini",
+            "“Shoulda Coulda Woulda” - Jayne Cobb",
         ];
 
         readonly List<string> positiveaffirmations =
