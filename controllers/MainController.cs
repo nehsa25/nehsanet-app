@@ -135,6 +135,7 @@ namespace nehsanet_app.Controllers
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
             "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
+            "“I believe in a thing called love, hoo-ooh!” - The Darkness",
         ];
 
         readonly List<string> positiveaffirmations =
