@@ -1,4 +1,5 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+secrets.cs
+dontcheckin.py
 
 # Compiled output
 /dist
@@ -54,3 +55,4 @@ https/api.nehsa.net.pfx
 run-api.ps1
 appsettings.json
 appsettings.json
+__pycache__/dontcheckin.cpython-312.pyc

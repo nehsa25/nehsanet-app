@@ -16,7 +16,24 @@ RUN dotnet publish -c Release -o out
 # Build the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
 COPY --from=build /app/out ./
+
+# Update package lists
+RUN apt update && \
+    apt upgrade -y
+
+# Install required packages
+RUN apt install -y python3.11
+RUN apt install -y python3-pip
+COPY dontcheckin.py ./
+COPY requirements.txt ./
+RUN pip install -r requirements.txt --break-system-packages
+
+# Check the installed version of Python
+RUN python3.11 --version
+
+COPY talk.py /app
 
 EXPOSE 22007/tcp
 

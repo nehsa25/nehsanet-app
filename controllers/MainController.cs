@@ -6,6 +6,9 @@ using Microsoft.Extensions.ObjectPool;
 using MySqlConnector;
 using nehsanet_app.Models;
 using nehsanet_app.Types;
+using nehsanet_app.Secrets;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace nehsanet_app.Controllers
 {
@@ -180,6 +183,49 @@ namespace nehsanet_app.Controllers
             "Learner",
             "a <a href=\"https://synthridersvr.com/\">Synth-Rider</a>"
         ];
+        public class GeminiClient
+        {
+            private readonly HttpClient _httpClient;
+            private readonly string _apiKey;
+            private readonly string _projectId;
+
+            public GeminiClient()
+            {
+                _apiKey = Gemini.APIKey;
+                _httpClient = new HttpClient();
+                _projectId = "nehsanet";
+            }
+
+            public async Task<string> TalkToGemini(string question)
+            {
+                
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "python3.11",
+                    Arguments = $"talk.py \"{question}\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
+
+                using (var process = new Process())
+                {
+                    process.StartInfo = startInfo;
+                    process.Start();
+                    process.WaitForExit();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    return output;
+                }
+            }
+        }
+
+
+        public class GeminiResponse
+        {
+            public required string GeneratedText { get; set; }
+            // Other properties as needed
+        }
 
         [HttpGet]
         [Route("/v1/name")]
@@ -247,8 +293,41 @@ namespace nehsanet_app.Controllers
         {
             _logger.LogInformation("Enter: UpdateName() [POST]");
             dynamic results = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson.Name);
-            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            _logger.LogInformation($"Exit: UpdateName(): results: ${JsonSerializer.Serialize(results)}");
             return results;
+        }
+
+        [HttpPost]
+        [Route("/v1/ai")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> CometAI(AIQuestion aiQuestion)
+        {
+            _logger.LogInformation("Enter: ai() [POST]");
+            var client = new GeminiClient();
+            var result = "";
+            
+            try
+            {
+                 _logger.LogInformation("ai() - sending request to Gemini: " + aiQuestion.Question);
+                result = await client.TalkToGemini(aiQuestion.Question);
+                result = result.Replace("\n", " ");
+                _logger.LogInformation("ai() - received response from Gemini: " + result);
+                aiQuestion.Answer = result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error: {e.Message}");
+            }
+
+            _logger.LogInformation($"Exit: ai(): aiQuestion: ${JsonSerializer.Serialize(aiQuestion)}");
+            if (result != null)
+            {
+                return Ok(aiQuestion);
+            }
+            else
+            {
+                return BadRequest("No response from Gemini");
+            }
         }
 
         [HttpGet]
@@ -265,7 +344,7 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/comment/{page}/{numberToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> GetComment([FromServices] MySqlDataSource db, string page, int numberToReturn=5)
+        public async Task<string> GetComment([FromServices] MySqlDataSource db, string page, int numberToReturn = 5)
         {
             _logger?.LogInformation("Enter: GetComment/id [GET]");
             var connection = new CommentsRepository(db, _logger);
@@ -289,7 +368,7 @@ namespace nehsanet_app.Controllers
             _logger?.LogInformation($"Exit: PostComment: results: ${results}");
             return results;
         }
-  
+
         [HttpGet]
         [Route("/v1/dbhealth")]
         [ProducesResponseType(StatusCodes.Status200OK)]
