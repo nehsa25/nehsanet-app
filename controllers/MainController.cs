@@ -196,13 +196,13 @@ namespace nehsanet_app.Controllers
                 _projectId = "nehsanet";
             }
 
-            public async Task<string> TalkToGemini(string question)
+            public async Task<string> TalkToGemini(string question, string previousAnswer)
             {
                 
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = "python3.11",
-                    Arguments = $"talk.py \"{question}\"",
+                    Arguments = $"talk.py \"{question}\" \"{previousAnswer}\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
@@ -309,7 +309,7 @@ namespace nehsanet_app.Controllers
             try
             {
                  _logger.LogInformation("ai() - sending request to Gemini: " + aiQuestion.Question);
-                result = await client.TalkToGemini(aiQuestion.Question);
+                result = await client.TalkToGemini(aiQuestion.Question, aiQuestion.PreviousAnswer);
                 result = result.Replace("\n", " ");
                 _logger.LogInformation("ai() - received response from Gemini: " + result);
                 aiQuestion.Answer = result;
