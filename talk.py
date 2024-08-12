@@ -62,7 +62,7 @@ def create_prompt(question, previous_answer):
     You have {len(character_data['additional'])} additional information, they are: {', '.join(character_data['question_requirements'])}.
     Your response cannot exceed {character_data['response_limit_sentences']} sentences.
     This was your previous answer: {previous_answer}, this question may be related to it.
-    You're being asked the following question: {question}"""    
+    You're being asked the following question: {question}"""
     return final_prompt
 
 
@@ -71,19 +71,21 @@ async def ask_question(question, previous_answer):
     model = genai.GenerativeModel(
         "gemini-1.5-flash",
     )
-    response = str(model.generate_content(create_prompt(question, previous_answer)).text)
+    response = str(
+        model.generate_content(create_prompt(question, previous_answer)).text
+    )
     return response.replace('"', "")
 
 
 async def main():
-  question = ""
-  previous_answer = ""
-  if len(sys.argv) > 1:
-      question = sys.argv[1]
-  if len(sys.argv) > 2:
-      previous_answer = sys.argv[2]
-  response = await ask_question(question.strip(), previous_answer.strip())
-  print(response.strip())
+    question = ""
+    previous_answer = ""
+    if len(sys.argv) > 1:
+        question = sys.argv[1]
+    if len(sys.argv) > 2:
+        previous_answer = sys.argv[2]
+    response = await ask_question(question.strip(), previous_answer.strip())
+    print(response.strip())
 
 
 if __name__ == "__main__":
