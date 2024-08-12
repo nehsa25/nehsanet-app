@@ -56,3 +56,4 @@ run-api.ps1
 appsettings.json
 appsettings.json
 __pycache__/dontcheckin.cpython-312.pyc
+dontcheckin.go
