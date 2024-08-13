@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ObjectPool;
 using MySqlConnector;
 using nehsanet_app.Models;
 using nehsanet_app.Types;
 using nehsanet_app.Secrets;
-using System.Net.Http.Headers;
-using System.Text;
+using System.Net;
 
 namespace nehsanet_app.Controllers
 {
@@ -220,7 +218,6 @@ namespace nehsanet_app.Controllers
             }
         }
 
-
         public class GeminiResponse
         {
             public required string GeneratedText { get; set; }
@@ -283,6 +280,54 @@ namespace nehsanet_app.Controllers
             results += ". A sm&ouml;rg&aring;sbord of a human!";
             dynamic jsonresults = JsonSerializer.Serialize(results);
             _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
+            return jsonresults;
+        }
+
+        [HttpGet]
+        [Route("/v1/getweather/{city}/{units}/{weatherType}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> GetWeather(string city, string units, string weatherType)
+        {
+            _logger.LogInformation("Enter: GetWeather() [GET]");
+            city = city.ToLower().Replace(' ', '+');
+            if (string.IsNullOrEmpty(units))
+                units = "imperial";
+            else 
+                units = units.ToLower();
+
+            string urlstem;
+            switch (weatherType)
+            {
+                case "description":
+                urlstem = $"weather_description/{city}?units={units}";
+                    break;
+                case "temperature":
+                    urlstem = $"weather_temp/{city}?units={units}";
+                    break;
+                case "full":
+                    urlstem = $"weather_all/{city}?units={units}";
+                    break;
+                case "emoji":
+                    urlstem = $"weather_emoji/{city}?units={units}";
+                    break;
+                default:
+                    urlstem = $"weather_all/{city}?units={units}";
+                    break;
+            }
+
+            string encodedUrl = $"http://192.168.68.105:8080/{WebUtility.UrlEncode(urlstem)}";
+            string content = "";   
+            _logger.LogInformation($"GetWeather url: ${encodedUrl}");         
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(encodedUrl);
+                if (response.IsSuccessStatusCode)
+                    content = await response.Content.ReadAsStringAsync();
+                else
+                    content = "City not found.";
+            }
+            dynamic jsonresults = JsonSerializer.Serialize(content);
+            _logger.LogInformation($"Exit: GetWeather(): results: ${jsonresults}");
             return jsonresults;
         }
 
