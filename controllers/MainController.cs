@@ -288,7 +288,7 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> GetWeather(string city, string units, string weatherType)
         {
-            _logger.LogInformation("Enter: GetWeather() [GET]");
+            _logger.LogInformation("Enter: GetWeather() [GET]: " + city + " " + units + " " + weatherType);
             city = city.ToLower().Replace(' ', '+');
             if (string.IsNullOrEmpty(units))
                 units = "imperial";
@@ -296,9 +296,9 @@ namespace nehsanet_app.Controllers
                 units = units.ToLower();
 
             string urlstem;
-            switch (weatherType)
+            switch (weatherType.ToLower())
             {
-                case "description":
+                case "words":
                 urlstem = $"weather_description/{city}?units={units}";
                     break;
                 case "temperature":
