@@ -22,10 +22,16 @@ if ($val.ToLower() -eq 'both' -or $val.ToLower() -eq 'api') {
 if ($val.ToLower() -eq '' -or $val.ToLower() -eq 'ui' -or $val.ToLower() -eq 'both') {
     set-location ./nehsanet; 
 
-    $val = read-host "Apply build number ${version}? [Y/n]";
-    if ($val.ToLower() -eq '' -or $val.ToLower() -eq 'y') {
+    if ($val.ToLower() -eq 'both') {
         write-host "Updating version.ts";
         set-content -path "./src/version.ts" -value "export const version = { number: '$version' }";
+    }
+    else {
+        $val = read-host "Apply build number ${version}? [Y/n]";
+        if ($val.ToLower() -eq '' -or $val.ToLower() -eq 'y') {
+            write-host "Updating version.ts";
+            set-content -path "./src/version.ts" -value "export const version = { number: '$version' }";
+        }
     }
     
     write-host "Removing old files at $localBuild";

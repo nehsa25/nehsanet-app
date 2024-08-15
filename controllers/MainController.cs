@@ -7,6 +7,7 @@ using nehsanet_app.Models;
 using nehsanet_app.Types;
 using nehsanet_app.Secrets;
 using System.Net;
+using System.Text.Encodings.Web;
 
 namespace nehsanet_app.Controllers
 {
@@ -119,6 +120,7 @@ namespace nehsanet_app.Controllers
         readonly List<string> quotes =
         [
             "“You live and learn. At any rate, you live.” - Douglas Adams",
+            "“It works on my computer.” - Every Developer Ever",
             "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
             "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",
             "“The quality of any advice anybody has to offer has to be judged against the quality of life they actually lead.” - Douglas Adams",
@@ -284,43 +286,56 @@ namespace nehsanet_app.Controllers
         }
 
         [HttpGet]
-        [Route("/v1/getweather/{city}/{units}/{weatherType}")]
+        [Route("/v1/getweather")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> GetWeather(string city, string units, string weatherType)
+        public async Task<string> GetWeather([FromQuery] string city, [FromQuery] string units, [FromQuery] string weatherType)
         {
             _logger.LogInformation("Enter: GetWeather() [GET]: " + city + " " + units + " " + weatherType);
-            city = city.ToLower().Replace(' ', '+');
+
+            // check city
+            if (string.IsNullOrEmpty(city))
+                throw new ArgumentNullException(nameof(city), "City is required.");            
+
+            // check units
             if (string.IsNullOrEmpty(units))
                 units = "imperial";
             else 
                 units = units.ToLower();
 
+            // check weatherType
+            if (string.IsNullOrEmpty(weatherType))
+                weatherType = "full";
+            weatherType = weatherType.ToLower();            
+
             string urlstem;
             switch (weatherType.ToLower())
             {
                 case "words":
-                urlstem = $"weather_description/{city}?units={units}";
+                urlstem = $"weather_description?city={city}&units={units}";
                     break;
                 case "temperature":
-                    urlstem = $"weather_temp/{city}?units={units}";
+                    urlstem = $"weather_temp?city={city}&units={units}";
                     break;
                 case "full":
-                    urlstem = $"weather_all/{city}?units={units}";
+                    urlstem = $"weather_all?city={city}&units={units}";
+                    break;
+                case "ascii":
+                    urlstem = $"weather_acsii?city={city}&units={units}";
                     break;
                 case "emoji":
-                    urlstem = $"weather_emoji/{city}?units={units}";
+                    urlstem = $"weather_emoji?city={city}&units={units}";
                     break;
                 default:
-                    urlstem = $"weather_all/{city}?units={units}";
+                    urlstem = $"weather_all?city={city}&units={units}";
                     break;
             }
 
-            string encodedUrl = $"http://192.168.68.105:8080/{WebUtility.UrlEncode(urlstem)}";
+            string url = $"http://192.168.68.105:8080/{urlstem}";
             string content = "";   
-            _logger.LogInformation($"GetWeather url: ${encodedUrl}");         
+            _logger.LogInformation($"GetWeather url: ${url}");         
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(encodedUrl);
+                var response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                     content = await response.Content.ReadAsStringAsync();
                 else
@@ -331,6 +346,34 @@ namespace nehsanet_app.Controllers
             return jsonresults;
         }
 
+        [HttpGet]
+        [Route("/v1/scaper")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> Scaper([FromQuery] string scrapeUrl)
+        {
+            _logger.LogInformation("Enter: Scaper() [GET]: " + scrapeUrl);
+
+            // check city
+            if (string.IsNullOrEmpty(scrapeUrl))
+                throw new ArgumentNullException(nameof(scrapeUrl), "url is required.");            
+
+            string urlstem = $"scraper?url={scrapeUrl}";
+            string url = $"http://192.168.68.105:8081/{urlstem}";
+            string content = "";   
+            _logger.LogInformation($"Scaper url: ${url}");         
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                    content = await response.Content.ReadAsStringAsync();
+                else
+                    content = "Scape data not found.";
+            }
+            dynamic jsonresults = JsonSerializer.Serialize(content);
+            _logger.LogInformation($"Exit: Scaper(): results: ${jsonresults}");
+            return jsonresults;
+        }
+        
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
