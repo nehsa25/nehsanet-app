@@ -139,6 +139,7 @@ namespace nehsanet_app.Controllers
             "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
+            "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
         ];
 
         readonly List<string> positiveaffirmations =
