@@ -35,10 +35,20 @@ if ($val.ToLower() -eq '' -or $val.ToLower() -eq 'ui' -or $val.ToLower() -eq 'bo
     }
     
     write-host "Removing old files at $localBuild";
-    remove-item $localBuild/* -recurse;
+    remove-item -v $localBuild/* -recurse;
     
     write-host "Running: ng build --configuration production";
     ng build --configuration production;
+
+    write-host "Updating sitemap";
+    if (test-path -path "./sitemap.xml" -eq true) {
+        remove-item ./sitemap.xml
+    }
+
+    set-location C:\src\python-angular-sitemapper
+    python update.py
+    copy-item -v .\sitemap.xml C:\src\nehsanet-app\nehsanet\src\sitemap.xml
+    set-location C:\src\nehsanet-app\nehsanet
     
     write-host "Updating index.html and version.ts with version info: ${version}";
     add-content -path $index_location -value $full_version;
