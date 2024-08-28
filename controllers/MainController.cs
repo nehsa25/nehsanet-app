@@ -188,37 +188,38 @@ namespace nehsanet_app.Controllers
         public class GeminiClient
         {
             private readonly HttpClient _httpClient;
-            private readonly string _apiKey;
-            private readonly string _projectId;
 
             public GeminiClient()
             {
-                _apiKey = Gemini.APIKey;
                 _httpClient = new HttpClient();
-                _projectId = "nehsanet";
             }
 
             public async Task<string> TalkToGemini(string question, string previousAnswer)
             {
-                
-                var startInfo = new ProcessStartInfo
+                string output = "";
+                await Task.Run(() =>
                 {
-                    FileName = "python3.11",
-                    Arguments = $"talk.py \"{question}\" \"{previousAnswer}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
 
-                using (var process = new Process())
-                {
-                    process.StartInfo = startInfo;
-                    process.Start();
-                    process.WaitForExit();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    return output;
-                }
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = "python3.11",
+                        Arguments = $"talk.py \"{question}\" \"{previousAnswer}\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+
+                    using (var process = new Process())
+                    {
+                        process.StartInfo = startInfo;
+                        process.Start();
+                        process.WaitForExit();
+                        output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+
+                    }
+                });
+                return output;
             }
         }
 
@@ -296,24 +297,24 @@ namespace nehsanet_app.Controllers
 
             // check city
             if (string.IsNullOrEmpty(city))
-                throw new ArgumentNullException(nameof(city), "City is required.");            
+                throw new ArgumentNullException(nameof(city), "City is required.");
 
             // check units
             if (string.IsNullOrEmpty(units))
                 units = "imperial";
-            else 
+            else
                 units = units.ToLower();
 
             // check weatherType
             if (string.IsNullOrEmpty(weatherType))
                 weatherType = "full";
-            weatherType = weatherType.ToLower();            
+            weatherType = weatherType.ToLower();
 
             string urlstem;
             switch (weatherType.ToLower())
             {
                 case "words":
-                urlstem = $"weather_description?city={city}&units={units}";
+                    urlstem = $"weather_description?city={city}&units={units}";
                     break;
                 case "temperature":
                     urlstem = $"weather_temp?city={city}&units={units}";
@@ -333,8 +334,8 @@ namespace nehsanet_app.Controllers
             }
 
             string url = $"http://192.168.68.105:8080/{urlstem}";
-            string content = "";   
-            _logger.LogInformation($"GetWeather url: ${url}");         
+            string content = "";
+            _logger.LogInformation($"GetWeather url: ${url}");
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(url);
@@ -357,12 +358,12 @@ namespace nehsanet_app.Controllers
 
             // check city
             if (string.IsNullOrEmpty(scrapeUrl))
-                throw new ArgumentNullException(nameof(scrapeUrl), "url is required.");            
+                throw new ArgumentNullException(nameof(scrapeUrl), "url is required.");
 
             string urlstem = $"scraper?url={scrapeUrl}";
             string url = $"http://192.168.68.105:8081/{urlstem}";
-            string content = "";   
-            _logger.LogInformation($"Scaper url: ${url}");         
+            string content = "";
+            _logger.LogInformation($"Scaper url: ${url}");
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(url);
@@ -375,7 +376,7 @@ namespace nehsanet_app.Controllers
             _logger.LogInformation($"Exit: Scaper(): results: ${jsonresults}");
             return jsonresults;
         }
-        
+
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -395,10 +396,10 @@ namespace nehsanet_app.Controllers
             _logger.LogInformation("Enter: ai() [POST]");
             var client = new GeminiClient();
             var result = "";
-            
+
             try
             {
-                 _logger.LogInformation("ai() - sending request to Gemini: " + aiQuestion.Question);
+                _logger.LogInformation("ai() - sending request to Gemini: " + aiQuestion.Question);
                 result = await client.TalkToGemini(aiQuestion.Question, aiQuestion.PreviousAnswer);
                 result = result.Replace("\n", " ");
                 _logger.LogInformation("ai() - received response from Gemini: " + result);
