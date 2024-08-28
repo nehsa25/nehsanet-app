@@ -1,122 +1,97 @@
+using System.Diagnostics;
 using MySqlConnector;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
-public class CSPMiddleware
-{
-    private readonly string _cspPolicy;
-
-    public CSPMiddleware(string cspPolicy)
-    {
-        _cspPolicy = cspPolicy;
-    }
-
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        context.Response.Headers.Append("Content-Security-Policy", _cspPolicy);
-        await next(context);
-    }
-}
-
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped<CSPMiddleware>();
-        services.AddSingleton<string>("default-src 'self';");
-    }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        // ... other middleware configurations
-
-        app.UseMiddleware<CSPMiddleware>();
-        // Example middleware usage
-
-        // ... other middleware configurations
-    }
-}
-
-internal class Program
+namespace WebApp
 {
 
-    public void ConfigureServices(IServiceCollection services)
+    public class CSPMiddleware // Make the constructor public
     {
-        string cspPolicy = "default-src 'self';";
-        services.AddScoped<CSPMiddleware>(serviceProvider => new CSPMiddleware(cspPolicy));
+        private readonly string _cspPolicy;
+
+        public CSPMiddleware(string cspPolicy) // public constructor
+        {
+            _cspPolicy = cspPolicy;
+        }
+
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            // Access the cspPolicy parameter here
+            context.Response.Headers.Append("Content-Security-Policy", _cspPolicy);
+            await next(context);
+        }
     }
 
-    private static void Main(string[] args)
+    internal class Program
     {
-        IHost host = Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
+        private static void Main(string[] args)
+        {
+            var customOrigin = "mainOrigin";
+            var localOrigin = "localOrigin";
+            WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
+            webApplicationBuilder.Services.AddEndpointsApiExplorer();
+            webApplicationBuilder.Services.AddSwaggerGen();
+            webApplicationBuilder.Services.AddHealthChecks();
+            webApplicationBuilder.Services.AddControllers();
+            webApplicationBuilder.Services.AddLogging();
+
+            // CORS support
+            webApplicationBuilder.Services.AddCors(options =>
             {
-                webBuilder.UseStartup<Startup>();
+                options.AddPolicy(name: customOrigin,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("https://www.nehsa.net").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                                  });
 
-            }).Build();
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Host created and logging enabled.");
+                options.AddPolicy(name: localOrigin,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                                  });
+            });
 
-        var builder = WebApplication.CreateBuilder(args);
+            // Logging support
+            webApplicationBuilder.Logging.ClearProviders();
+            webApplicationBuilder.Logging.AddConsole();
+            webApplicationBuilder.Logging.AddDebug();
 
-        // Logging support
-        builder.Logging.ClearProviders();
-        builder.Logging.AddConsole();
-        builder.Logging.AddDebug();
+            // MySQL support
+            webApplicationBuilder.Services.AddMySqlDataSource(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
+            var app = webApplicationBuilder.Build();
 
-        // CORS support
-        var customOrigin = "mainOrigin";
-        var localOrigin = "localOrigin";
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy(name: customOrigin,
-                              policy =>
-                              {
-                                  policy.WithOrigins("https://www.nehsa.net").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                              });
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Logging setup");
 
-            options.AddPolicy(name: localOrigin,
-                              policy =>
-                              {
-                                  policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                              });
-        });
+            // set to use CORS
+            logger.LogInformation("Setting up CORS");
+            app.UseCors(customOrigin);
+            app.UseCors(localOrigin);
 
-        // middleware services
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddHealthChecks();
-        builder.Services.AddControllers();
-        builder.Services.AddLogging();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHttpsRedirection();
+                app.UseExceptionHandler("/Error");
+            }
 
-        // MySQL support
-        builder.Services.AddMySqlDataSource(builder.Configuration.GetConnectionString("Default")!);
-
-        // Setup final app to run
-        var app = builder.Build();
-
-        // set to use CORS
-        app.UseCors(customOrigin);
-        app.UseCors(localOrigin);
-
-        logger.LogInformation("app.Environment.IsDevelopment(): " + app.Environment.IsDevelopment());
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-        else
-        {
             app.UseHttpsRedirection();
-            app.UseExceptionHandler("/Error");
-        }
-        app.UseRouting();
-        app.MapControllers();
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseHealthChecks("/health");
-        app.UseStaticFiles(); // allow us to serve map images
+            app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseHealthChecks("/health");
+            app.UseStaticFiles(); // allow us to serve map images
 
-        // start app
-        logger.LogInformation("Starting Application!");
-        app.Run();
+            logger.LogInformation("Host created and logging enabled.");
+            app.MapControllers();
+
+            // start app
+            logger.LogInformation("Starting Application!");
+            app.Run();
+        }
     }
 }
-
