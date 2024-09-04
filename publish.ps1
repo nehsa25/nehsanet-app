@@ -41,7 +41,7 @@ if ($val.ToLower() -eq '' -or $val.ToLower() -eq 'ui' -or $val.ToLower() -eq 'bo
     ng build --configuration production;
 
     write-host "Updating sitemap";
-    if (test-path -path "./sitemap.xml" -eq true) {
+    if (Test-Path "./sitemap.xml") {
         remove-item ./sitemap.xml
     }
 
