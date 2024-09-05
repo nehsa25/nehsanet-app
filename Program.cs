@@ -1,5 +1,5 @@
 using MySqlConnector;
-using Microsoft.AspNetCore.SpaServices;
+using Serilog;
 
 namespace WebApp
 {
@@ -14,35 +14,34 @@ namespace WebApp
 
         public async Task Invoke(HttpContext context)
         {
-            Console.WriteLine("Invoke");
+            Console.WriteLine($"AngularMiddleware Invoke: {context.Request.Path}, IP: {context.Connection.RemoteIpAddress}");
             if (context.Request.Path.StartsWithSegments("/v1"))
             {
                 // Forward API requests to Kestrel
-                Console.WriteLine("Redirecting to Kestrel: " + context.Request.Path);
+                Console.WriteLine("Directing to Kestrel");
                 await _next(context);
             }
             else
             {
                 // Redirect all other requests to Angular's index.html
-                Console.WriteLine("Redirecting to Angular: " + context.Request.Path);
+                Console.WriteLine("Directing to Angular SPA");
                 context.Response.StatusCode = StatusCodes.Status302Found;
                 context.Response.Headers.Location = "/";
             }
         }
     }
 
-    public class CSPMiddleware // Make the constructor public
+    public class CSPMiddleware
     {
         private readonly string _cspPolicy;
 
-        public CSPMiddleware(string cspPolicy) // public constructor
+        public CSPMiddleware(string cspPolicy)
         {
             _cspPolicy = cspPolicy;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            // Access the cspPolicy parameter here
             context.Response.Headers.Append("Content-Security-Policy", _cspPolicy);
             await next(context);
         }
@@ -95,22 +94,27 @@ namespace WebApp
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Logging setup");
 
-            // if (app.Environment.IsDevelopment())
-            // {
-            //     Console.WriteLine("Development mode");
-            //     app.UseCors(localOrigin);
-            //     app.UseDeveloperExceptionPage();
-            // }
-            // else
-            // {
-            //     Console.WriteLine("Development mode");
-            //     app.UseCors(customOrigin);
-            //     app.UseHttpsRedirection();
-            //     app.UseExceptionHandler("/Error");
-            //     app.UseSwagger();
-            //     app.UseSwaggerUI();
-            //     app.UseHealthChecks("/health");
-            // }
+            // Used to serve the Angular app
+            app.UseMiddleware<AngularMiddleware>();
+
+            // Setup the middleware that will handle the SPA routing
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+                {  
+                    logger.LogInformation("404 received, redirecting for Angular SPA: " + context.Request.Path);
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+
+            // ensure we redirect to index.html any non API requests
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                RequestPath = "/app",
+                DefaultFileNames = ["index.html"]
+            });
 
             // set to use CORS
             logger.LogInformation("Setting up CORS for API: " + api);
@@ -131,15 +135,9 @@ namespace WebApp
             app.UseStaticFiles(); // allow us to serve map images
             app.MapControllers(); // This maps the controllers to the routing middleware. e.g. without this, the controllers will not be called
 
-            // Used to serve the Angular app
-            app.UseMiddleware<AngularMiddleware>();
+            // setup the middleware to handle the Content-Security-Policy header
+            // app.UseMiddleware<CSPMiddleware>("default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self';");
 
-            // ensure we redirect to index.html any non API requests
-            app.UseDefaultFiles(new DefaultFilesOptions
-            {
-                RequestPath = "/app",
-                DefaultFileNames = new List<string> { "index.html" }
-            });
 
             // start app
             logger.LogInformation("Starting Application!");
