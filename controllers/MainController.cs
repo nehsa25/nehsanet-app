@@ -119,6 +119,7 @@ namespace nehsanet_app.Controllers
 
         readonly List<string> quotes =
         [
+            "Huzzah!",
             "“You live and learn. At any rate, you live.” - Douglas Adams",
             "“It works on my computer.” - Every Developer Ever",
             "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
@@ -134,7 +135,6 @@ namespace nehsanet_app.Controllers
             "“The impossible often has a kind of integrity to it which the merely improbable lacks.” - Douglas Adams",
             "“When the elevator tries to bring you down, go crazy!” - Prince",
             "“I get knocked down, but I get up again.” - Chumbawamba",
-            "“But just because you're paranoid doesn't mean there isn't an invisible demon about to eat your face.” - Harry Dresden",
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
             "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
