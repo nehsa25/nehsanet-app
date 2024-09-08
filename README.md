@@ -2,7 +2,7 @@
 
 ## Description
 
-Wraps Node app for deployment to GCP.  This is the webserver and server-side support for our Angular app
+Wraps Node app for deployment to GCP.  This is the API backend for for our Angular app
 
 ## Tests
 
