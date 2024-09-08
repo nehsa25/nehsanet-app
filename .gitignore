@@ -8,6 +8,7 @@ dontcheckin.py
 /bazel-out
 contactme.txt
 out/
+publish.ps1
 
 # Node
 /node_modules
@@ -57,3 +58,5 @@ appsettings.json
 appsettings.json
 __pycache__/dontcheckin.cpython-312.pyc
 dontcheckin.go
+
+publish.ps1
