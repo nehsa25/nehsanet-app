@@ -121,6 +121,8 @@ namespace nehsanet_app.Controllers
         [
             "Huzzah!",
             "“You live and learn. At any rate, you live.” - Douglas Adams",
+            "“Don't worry. Be happy.” - Bobby McFerrin",
+            "“Birds flying high, you know how I feel.” - Nina Simone",
             "“It works on my computer.” - Every Developer Ever",
             "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
             "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",

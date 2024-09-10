@@ -94,27 +94,27 @@ namespace WebApp
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Logging setup");
 
-            // Used to serve the Angular app
-            app.UseMiddleware<AngularMiddleware>();
+            // // Used to serve the Angular app
+            // app.UseMiddleware<AngularMiddleware>();
 
-            // Setup the middleware that will handle the SPA routing
-            app.Use(async (context, next) =>
-            {
-                await next();
-                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
-                {  
-                    logger.LogInformation("404 received, redirecting for Angular SPA: " + context.Request.Path);
-                    context.Request.Path = "/index.html";
-                    await next();
-                }
-            });
+            // // Setup the middleware that will handle the SPA routing
+            // app.Use(async (context, next) =>
+            // {
+            //     await next();
+            //     if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+            //     {  
+            //         logger.LogInformation("404 received, redirecting for Angular SPA: " + context.Request.Path);
+            //         context.Request.Path = "/index.html";
+            //         await next();
+            //     }
+            // });
 
-            // ensure we redirect to index.html any non API requests
-            app.UseDefaultFiles(new DefaultFilesOptions
-            {
-                RequestPath = "/app",
-                DefaultFileNames = ["index.html"]
-            });
+            // // ensure we redirect to index.html any non API requests
+            // app.UseDefaultFiles(new DefaultFilesOptions
+            // {
+            //     RequestPath = "/app",
+            //     DefaultFileNames = ["index.html"]
+            // });
 
             // set to use CORS
             logger.LogInformation("Setting up CORS for API: " + api);
