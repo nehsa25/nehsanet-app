@@ -51,10 +51,6 @@ namespace WebApp
     {
         private static void Main(string[] args)
         {
-            var api = "apiOrigin";
-            var local = "localOrigin";
-            var website = "websiteOrgin";
-
             WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
             webApplicationBuilder.Services.AddEndpointsApiExplorer();
             webApplicationBuilder.Services.AddSwaggerGen();
@@ -64,23 +60,16 @@ namespace WebApp
 
             // CORS support
             webApplicationBuilder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: website,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins("https://www.nehsa.net").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                                  });
-                options.AddPolicy(name: api,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins("https://api.nehsa.net").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                                  });
-                options.AddPolicy(name: local,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                                  });
-            });
+                {
+                    options.AddDefaultPolicy(
+                        policy =>
+                        {
+                            policy.WithOrigins("http://nehsa.net",
+                                                "http://www.nehsa.net",
+                                                "https://nehsa.net",
+                                                "https://www.nehsa.net");
+                        });
+                });
 
             // Logging support
             webApplicationBuilder.Logging.ClearProviders();
@@ -94,38 +83,6 @@ namespace WebApp
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Logging setup");
 
-            // // Used to serve the Angular app
-            // app.UseMiddleware<AngularMiddleware>();
-
-            // // Setup the middleware that will handle the SPA routing
-            // app.Use(async (context, next) =>
-            // {
-            //     await next();
-            //     if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
-            //     {  
-            //         logger.LogInformation("404 received, redirecting for Angular SPA: " + context.Request.Path);
-            //         context.Request.Path = "/index.html";
-            //         await next();
-            //     }
-            // });
-
-            // // ensure we redirect to index.html any non API requests
-            // app.UseDefaultFiles(new DefaultFilesOptions
-            // {
-            //     RequestPath = "/app",
-            //     DefaultFileNames = ["index.html"]
-            // });
-
-            // set to use CORS
-            logger.LogInformation("Setting up CORS for API: " + api);
-            app.UseCors(api);
-
-            logger.LogInformation("Setting up CORS for WEBSITE: " + api);
-            app.UseCors(website);
-
-            logger.LogInformation("Setting up CORS for LOCAL: " + api);
-            app.UseCors(local);
-
             app.UseHttpsRedirection(); // redirect to https
             app.UseExceptionHandler("/Error"); // handle exceptions
             app.UseSwagger(); // setup swagger, this is different than UseSWaggerUI in that it just sets up the middleware
@@ -135,9 +92,9 @@ namespace WebApp
             app.UseStaticFiles(); // allow us to serve map images
             app.MapControllers(); // This maps the controllers to the routing middleware. e.g. without this, the controllers will not be called
 
-            // setup the middleware to handle the Content-Security-Policy header
-            // app.UseMiddleware<CSPMiddleware>("default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self';");
-
+            // set to use CORS
+            logger.LogInformation("Setting up CORS for API");
+            app.UseCors();
 
             // start app
             logger.LogInformation("Starting Application!");
