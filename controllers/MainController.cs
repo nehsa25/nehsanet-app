@@ -435,6 +435,19 @@ namespace nehsanet_app.Controllers
         }
 
         [HttpGet]
+        [Route("/v1/related")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<string> GetRelated([FromServices] MySqlDataSource db, [FromQuery] string page)
+        {
+            _logger?.LogInformation("Enter: related [GET]");
+            var connection = new RelatedRepository(db, _logger);
+            List<RelatedPages> db_result = await connection.GetRelatedPages(page);
+            dynamic results = JsonSerializer.Serialize(db_result);
+            _logger?.LogInformation($"Exit: related: results: ${results}");
+            return results;
+        }
+
+        [HttpGet]
         [Route("/v1/comment/{page}/{numberToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> GetComment([FromServices] MySqlDataSource db, string page, int numberToReturn = 5)

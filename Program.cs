@@ -67,7 +67,9 @@ namespace WebApp
                             policy.WithOrigins("http://nehsa.net",
                                                 "http://www.nehsa.net",
                                                 "https://nehsa.net",
-                                                "https://www.nehsa.net");
+                                                "https://www.nehsa.net",
+                                                "http://localhost:4200",
+                                                "https://localhost:4200");
                         });
                 });
 
