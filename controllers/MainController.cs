@@ -143,6 +143,7 @@ namespace nehsanet_app.Controllers
             "Find win-wins.",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
+            "Let Bygones be Bygones.",
         ];
 
         readonly List<string> positiveaffirmations =

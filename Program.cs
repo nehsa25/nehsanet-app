@@ -69,7 +69,7 @@ namespace WebApp
                                                 "https://nehsa.net",
                                                 "https://www.nehsa.net",
                                                 "http://localhost:4200",
-                                                "https://localhost:4200");
+                                                "https://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                         });
                 });
 
