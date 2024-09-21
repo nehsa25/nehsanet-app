@@ -124,7 +124,7 @@ namespace nehsanet_app.Controllers
             "“Don't worry. Be happy.” - Bobby McFerrin",
             "“Birds flying high, you know how I feel.” - Nina Simone",
             "“It works on my computer.” - Every Developer Ever",
-            "“A learning experience is one of those things that says, 'You know that thing you just did? Don't do that.’” - Douglas Adams",
+            "“A learning experience is one of those things that says, 'You know that thing you just did?' Don't do that.” - Douglas Adams",
             "“I may not have gone where I intended to go, but I think I have ended up where I needed to be.” - Douglas Adams",
             "“The quality of any advice anybody has to offer has to be judged against the quality of life they actually lead.” - Douglas Adams",
             "“I refuse to answer that question on the grounds that I don't know the answer.” - Douglas Adams",
