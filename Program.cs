@@ -85,7 +85,7 @@ namespace WebApp
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Logging setup");
 
-            app.UseHttpsRedirection(); // redirect to https
+            // app.UseHttpsRedirection(); // redirect to https
             app.UseExceptionHandler("/Error"); // handle exceptions
             app.UseSwagger(); // setup swagger, this is different than UseSWaggerUI in that it just sets up the middleware
             app.UseSwaggerUI(); // setup swagger UI, this is the UI that is used to view the API
