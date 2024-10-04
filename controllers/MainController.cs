@@ -140,6 +140,7 @@ namespace nehsanet_app.Controllers
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
             "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
+            "“If I want to contact my friends, I have to email them! Like I'm a pilgrim!”",
             "Find win-wins.",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
