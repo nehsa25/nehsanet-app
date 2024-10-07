@@ -142,6 +142,7 @@ namespace nehsanet_app.Controllers
             "“Shoulda Coulda Woulda” - Jayne Cobb",
             "“If I want to contact my friends, I have to email them...like I'm a pilgrim!”",
             "Find win-wins.",
+            "“YES!” - Gimli",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
             "Let Bygones be Bygones.",
