@@ -140,12 +140,14 @@ namespace nehsanet_app.Controllers
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
             "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
-            "“If I want to contact my friends, I have to email them...like I'm a pilgrim!”",
+            "“If I want to contact my friends, I have to email them...like I'm a pilgrim!” - Seaside, Oregon Resident",
             "Find win-wins.",
             "“YES!” - Gimli",
+            "“Anyone who has never made a mistake has never tried anything new.” - Albert Einstein",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
             "Let Bygones be Bygones.",
+            "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt"
         ];
 
         readonly List<string> positiveaffirmations =
