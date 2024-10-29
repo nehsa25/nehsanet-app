@@ -143,6 +143,7 @@ namespace nehsanet_app.Controllers
             "“If I want to contact my friends, I have to email them...like I'm a pilgrim!” - Seaside, Oregon Resident",
             "Find win-wins.",
             "“YES!” - Gimli",
+            "“I am a large, semi-muscular man. I can take it.” - Wash",
             "“Anyone who has never made a mistake has never tried anything new.” - Albert Einstein",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
