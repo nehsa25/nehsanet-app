@@ -147,6 +147,7 @@ namespace nehsanet_app.Controllers
             "“Anyone who has never made a mistake has never tried anything new.” - Albert Einstein",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
+            "“He cursed like a drunken sailor with a broken leg, but only at his donkeys.” - Kvothe",
             "Let Bygones be Bygones.",
             "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt"
         ];
