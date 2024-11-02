@@ -149,6 +149,7 @@ namespace nehsanet_app.Controllers
             "“Kitty at my foot and I wanna touch it.” - The Presidents of the United States",
             "“He cursed like a drunken sailor with a broken leg, but only at his donkeys.” - Kvothe",
             "“I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.” - Linus Torvalds",
+            "“When he steps, his whole foot treads the ground.” - Wilem",
             "Let Bygones be Bygones.",
             "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt"
         ];
