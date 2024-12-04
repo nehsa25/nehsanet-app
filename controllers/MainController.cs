@@ -52,7 +52,9 @@ namespace nehsanet_app.Controllers
             "“I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.” - Linus Torvalds",
             "“When he steps, his whole foot treads the ground.” - Wilem",
             "Let Bygones be Bygones.",
-            "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt"
+            "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt",
+            "“You will continue to suffer if you have an emotional reaction to everything that is said to you.” - Warren Buffett",
+            "“Breathe and allow things to pass.” - Warren Buffett"
         ];
 
         readonly List<string> positiveaffirmations =
