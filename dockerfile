@@ -1,6 +1,6 @@
 
 # Use the official .NET Core SDK as a parent image
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 WORKDIR /app
 
 # Copy the project file and restore any dependencies (use .csproj for the project name)
@@ -17,7 +17,7 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
-COPY --from=build /app/out ./
+COPY --from=base /app/out ./
 
 # Update package lists
 RUN apt update && \

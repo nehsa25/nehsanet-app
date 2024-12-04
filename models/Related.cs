@@ -1,4 +1,4 @@
-namespace nehsanet_app.Models
+namespace nehsanet_app.models
 {
     public class RelatedPages()
     {

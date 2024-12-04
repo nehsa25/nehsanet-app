@@ -1,12 +1,17 @@
-namespace nehsanet_app.Models
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace nehsanet_app.models
 {
-    public class CommentPost(string username, string comment, string? page, int? commentid = null, string? ip = null)
+    [Table("Comments")]
+    public class DBComment(string username, string comment, string? page, int? commentid, string? ip = null)
     {
-        public int? commentid { get; set; } = commentid;
-        public string username { get; set; } = username;
-        public string comment { get; set; } = comment;
-        public string page { get; set; } = page ?? "";
-        public string ip { get; set; } = ip ?? "";
-        public DateTime date { get; set; } = DateTime.Now;
+        [Key]
+        public int? CommentID { get; set; } = commentid;
+        public string Username { get; set; } = username;
+        public string Comment { get; set; } = comment;
+        public string Page { get; set; } = page ?? "";
+        public string IP { get; set; } = ip ?? "";
+        public DateTime Date { get; set; } = DateTime.Now;
     }
 }

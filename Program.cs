@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using nehsanet_app.db;
 using Serilog;
 
 namespace WebApp
@@ -58,6 +60,13 @@ namespace WebApp
             webApplicationBuilder.Services.AddControllers();
             webApplicationBuilder.Services.AddLogging();
 
+            // Add MySQL support
+            webApplicationBuilder.Services.AddMySqlDataSource(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
+            webApplicationBuilder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseMySQL(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
+            });
+
             // CORS support
             webApplicationBuilder.Services.AddCors(options =>
                 {
@@ -66,6 +75,7 @@ namespace WebApp
                         {
                             policy.WithOrigins("http://nehsa.net",
                                                 "http://www.nehsa.net",
+                                                "https://mud.nehsa.net",
                                                 "https://nehsa.net",
                                                 "https://www.nehsa.net",
                                                 "http://localhost:4200",
@@ -78,8 +88,6 @@ namespace WebApp
             webApplicationBuilder.Logging.AddConsole();
             webApplicationBuilder.Logging.AddDebug();
 
-            // MySQL support
-            webApplicationBuilder.Services.AddMySqlDataSource(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
             var app = webApplicationBuilder.Build();
 
             var logger = app.Services.GetRequiredService<ILogger<Program>>();

@@ -60,3 +60,4 @@ __pycache__/dontcheckin.cpython-312.pyc
 dontcheckin.go
 
 publish.ps1
+.vscode/tasks.json

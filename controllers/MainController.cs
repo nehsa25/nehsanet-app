@@ -1,120 +1,21 @@
-
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
-using nehsanet_app.Models;
+using nehsanet_app.models;
+using nehsanet_app.utilities;
 using nehsanet_app.Types;
-using nehsanet_app.Secrets;
-using System.Net;
-using System.Text.Encodings.Web;
 
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    [Route("/")]
     public class Main : ControllerBase
     {
         private readonly ILogger _logger;
-
-        List<NameAbout> names = new();
-
+      
         public Main(ILogger<Main> logger)
         {
             _logger = logger;
-            names.Add(
-                new(
-                    "Kvothe",
-                    "[You] have stolen princesses back from sleeping barrow kings. [You] burned down the town of Trebon. [You] have spent the night with Felurian and left with both my sanity and my life. I was expelled from the University at a younger age than most people are allowed in. I tread paths by moonlight that others fear to speak of during day. [you] have talked to Gods, loved women, and written songs that make the minstrels weep. ― Patrick Rothfuss, The Name of the Wind"
-                )
-            );
-            names.Add(
-                new(
-                    "Wilem",
-                    "You're a taciturn individual!"
-                )
-            );
-            names.Add(
-                new(
-                    "Sanya",
-                    "Wield Esperacchius with honor!"
-                )
-            );
-            names.Add(
-                new(
-                    "Maximus",
-                    "You're my cat. I love you."
-                )
-            );
-            names.Add(
-                new(
-                    "Mab",
-                    "You keep your bargains, My Queen."
-                )
-            );
-            names.Add(
-                new(
-                    "Elodin",
-                    "You'll go to the Crockery if YOU'RE A RAVEN!"
-                )
-            );
-            names.Add(
-                new(
-                    "Dresden",
-                    "Forzare!"
-                )
-            );
-            names.Add(
-                new(
-                    "Perrin",
-                    "Howl!"
-                )
-            );
-            names.Add(new("Butters", "POLKA will never die!"));
-            names.Add(new("Joe", ""));
-            names.Add(new("Emma", ""));
-            names.Add(new("Isabella", ""));
-            names.Add(new("Akari", ""));
-            names.Add(new("Gorg", ""));
-            names.Add(new("Tom", ""));
-            names.Add(new("Shane", ""));
-            names.Add(new("Shuri", ""));
-            names.Add(new("Thomas", ""));
-            names.Add(new("Daphne", ""));
-            names.Add(new("Felicity", ""));
-            names.Add(new("Bonnie", ""));
-            names.Add(new("Tabs", ""));
-            names.Add(new("Dot", ""));
-            names.Add(new("Ambrose", ""));
-            names.Add(new("Crossen", ""));
-            names.Add(new("Dunstan", ""));
-            names.Add(new("Bink", ""));
-            names.Add(new("Ivar", ""));
-            names.Add(new("Ivan", ""));
-            names.Add(new("Beatrice", "Subaru Subaru Subaru!"));
-            names.Add(new("Subaru", ""));
-            names.Add(new("Roswaal", ""));
-            names.Add(new("Ashen", ""));
-            names.Add(new("Sigrid", ""));
-            names.Add(new("Renkath", ""));
-            names.Add(new("Kelsek", ""));
-            names.Add(new("Ash", ""));
-            names.Add(new("Jay", ""));
-            names.Add(new("Bob", ""));
-            names.Add(new("Fred", ""));
-            names.Add(new("Mike", ""));
-            names.Add(new("James", ""));
-            names.Add(new("Jones", ""));
-            names.Add(new("Tim", ""));
-            names.Add(new("Timm", ""));
-            names.Add(new("Harry", "The Burger King!"));
-            names.Add(new("John", ""));
-            names.Add(new("Jack", ""));
-            names.Add(new("May", ""));
-            names.Add(new("Sally", ""));
-            names.Add(new("Candie", ""));
-            names.Add(new("Jesse", "YOU ARE ME! AM I YOU?"));
-            names.Add(new("Ethan", ""));
         }
 
         readonly List<string> quotes =
@@ -241,39 +142,6 @@ namespace nehsanet_app.Controllers
         }
 
         [HttpGet]
-        [Route("/v1/name")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public string GetName()
-        {
-            _logger.LogInformation("Enter: GetName() [GET]");
-            dynamic results = JsonSerializer.Serialize(names[Random.Shared.Next(names.Count)]);
-            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
-            return results;
-        }
-
-        [HttpGet]
-        [Route("/v1/name/{numToReturn}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public string GetNames(int numToReturn)
-        {
-            _logger.LogInformation("Enter: names() [GET]");
-            int founditems = 0;
-            List<dynamic> items = [];
-            while (founditems < numToReturn)
-            {
-                dynamic item = names[Random.Shared.Next(names.Count)];
-                if (!items.Contains(item))
-                {
-                    items.Add(item);
-                    founditems++;
-                }
-            }
-            dynamic jsonresults = JsonSerializer.Serialize(items);
-            _logger.LogInformation($"Exit: names(): results: ${jsonresults}");
-            return jsonresults;
-        }
-
-        [HttpGet]
         [Route("/v1/positiveadjective")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetPositiveAdjective()
@@ -361,11 +229,11 @@ namespace nehsanet_app.Controllers
         }
 
         [HttpGet]
-        [Route("/v1/scaper")]
+        [Route("/v1/Scraper")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> Scaper([FromQuery] string scrapeUrl)
+        public async Task<string> Scraper([FromQuery] string scrapeUrl)
         {
-            _logger.LogInformation("Enter: Scaper() [GET]: " + scrapeUrl);
+            _logger.LogInformation("Enter: Scraper() [GET]: " + scrapeUrl);
 
             // check city
             if (string.IsNullOrEmpty(scrapeUrl))
@@ -374,7 +242,7 @@ namespace nehsanet_app.Controllers
             string urlstem = $"scraper?url={scrapeUrl}";
             string url = $"http://192.168.68.105:8081/{urlstem}";
             string content = "";
-            _logger.LogInformation($"Scaper url: ${url}");
+            _logger.LogInformation($"Scraper url: ${url}");
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(url);
@@ -384,7 +252,7 @@ namespace nehsanet_app.Controllers
                     content = "Scape data not found.";
             }
             dynamic jsonresults = JsonSerializer.Serialize(content);
-            _logger.LogInformation($"Exit: Scaper(): results: ${jsonresults}");
+            _logger.LogInformation($"Exit: Scraper(): results: ${jsonresults}");
             return jsonresults;
         }
 
@@ -449,38 +317,10 @@ namespace nehsanet_app.Controllers
         public async Task<string> GetRelated([FromServices] MySqlDataSource db, [FromQuery] string page)
         {
             _logger?.LogInformation("Enter: related [GET]");
-            var connection = new RelatedRepository(db, _logger);
+            var connection = new RelatedPagesUtility(db, _logger);
             List<RelatedPages> db_result = await connection.GetRelatedPages(page);
             dynamic results = JsonSerializer.Serialize(db_result);
             _logger?.LogInformation($"Exit: related: results: ${results}");
-            return results;
-        }
-
-        [HttpGet]
-        [Route("/v1/comment/{page}/{numberToReturn}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> GetComment([FromServices] MySqlDataSource db, string page, int numberToReturn = 5)
-        {
-            _logger?.LogInformation("Enter: GetComment/id [GET]");
-            var connection = new CommentsRepository(db, _logger);
-            List<CommentPost> db_result = (List<CommentPost>)await connection.GetLastXCommentsByPage(page, numberToReturn);
-            dynamic results = JsonSerializer.Serialize(db_result);
-            _logger?.LogInformation($"Exit: GetComment/id: results: ${results}");
-            return results;
-        }
-
-        [HttpPost]
-        [Route("/v1/comment")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> PostComment([FromServices] MySqlDataSource db, [FromBody] CommentPost commentPost)
-        {
-            _logger?.LogInformation("Enter: PostComment [POST]");
-            var connection = new CommentsRepository(db, _logger);
-            if (HttpContext.Connection.RemoteIpAddress != null)
-                commentPost.ip = HttpContext.Connection.RemoteIpAddress.ToString();
-            await connection.AddComment(commentPost);
-            dynamic results = JsonSerializer.Serialize<string>("OK");
-            _logger?.LogInformation($"Exit: PostComment: results: ${results}");
             return results;
         }
 
@@ -490,7 +330,7 @@ namespace nehsanet_app.Controllers
         public async Task<string> GetDBHealth([FromServices] MySqlDataSource db)
         {
             _logger?.LogInformation("Enter: GetDBHealth()");
-            var connection = new CommentsRepository(db, _logger);
+            var connection = new CommentsUtility(db, _logger);
             var db_result = await connection.GetLastXCommentsByPage("this_website", 1);
             dynamic results = JsonSerializer.Serialize(db_result);
             _logger?.LogInformation($"Exit: GetDBHealth(): results: ${JsonSerializer.Serialize(results)}");

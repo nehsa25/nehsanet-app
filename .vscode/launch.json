@@ -11,6 +11,16 @@
             "projectPath": "${workspaceFolder}/nehsanet-app.csproj"
         },
         {
+            "name": "Docker .NET Launch (doesnt work)",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+
+            "netCore": {
+                "appProject": "${workspaceFolder}/nehsanet-app.csproj",
+            },
+        },
+        {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
