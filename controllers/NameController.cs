@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>>  GetName()
+        public async Task<ActionResult<string>> GetName()
         {
             _logger.LogInformation("Enter: names() [GET]");
             string jsonresults = await _context.DBName.Select(_ => _.Name).FirstOrDefaultAsync() ?? "";
@@ -40,12 +41,28 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/name/{numToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<NameAbout>>> GetNames(int numToReturn)
+        public async Task<List<dynamic>> GetNames(int numToReturn)
         {
             _logger.LogInformation("Enter: names() [GET]");
-            dynamic jsonresults = await _context.DBName.Select(_ => new NameAbout(_.Name, _.Description)).Take(numToReturn).ToListAsync();            
-            _logger.LogInformation($"Exit: names(): results: ${JsonSerializer.Serialize(jsonresults)}");
-            return jsonresults;
+            List<NameAbout> names = (from name in _context.DBName                    
+                    select new NameAbout(name.Name, name.Description)).ToList();
+
+            // Take two random names from the list
+             int founditems = 0;
+            List<dynamic> items = [];
+            while (founditems < numToReturn)
+            {
+                dynamic item = names[Random.Shared.Next(names.Count)];
+                if (!items.Contains(item))
+                {
+                    items.Add(item);
+                    founditems++;
+                }
+            }
+            dynamic jsonresults = JsonSerializer.Serialize(items);
+
+            _logger.LogInformation($"Exit: names(): results: ${JsonSerializer.Serialize(items)}");
+            return items;
         }
     }
 }
