@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
+using nehsanet_app.Services;
 using nehsanet_app.Types;
 
 namespace nehsanet_app.Controllers
@@ -10,11 +11,11 @@ namespace nehsanet_app.Controllers
     [ApiController]
     public class NamesController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILoggingProvider _logger;
         private readonly DataContext _context;
         readonly List<NameAbout> names = [];
 
-        public NamesController(DataContext context, ILogger<NamesController> logger)
+        public NamesController(DataContext context, ILoggingProvider logger)
         {
             _context = context;
             _logger = logger;
@@ -32,18 +33,18 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<string>> GetName()
         {
-            _logger.LogInformation("Enter: names() [GET]");
+            _logger.Log("Enter: names() [GET]");
             string jsonresults = await _context.DBName.Select(_ => _.Name).FirstOrDefaultAsync() ?? "";
-            _logger.LogInformation($"Exit: names(): results: ${jsonresults}");
+            _logger.Log($"Exit: names(): results: {jsonresults}");
             return jsonresults;
         }
 
         [HttpGet]
         [Route("/v1/name/{numToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<List<dynamic>> GetNames(int numToReturn)
+        public List<dynamic> GetNames(int numToReturn)
         {
-            _logger.LogInformation("Enter: names() [GET]");
+            _logger.Log("Enter: names() [GET]");
             List<NameAbout> names = (from name in _context.DBName                    
                     select new NameAbout(name.Name, name.Description)).ToList();
 
@@ -61,7 +62,7 @@ namespace nehsanet_app.Controllers
             }
             dynamic jsonresults = JsonSerializer.Serialize(items);
 
-            _logger.LogInformation($"Exit: names(): results: ${JsonSerializer.Serialize(items)}");
+            _logger.Log($"Exit: names(): results: ${JsonSerializer.Serialize(items)}");
             return items;
         }
     }

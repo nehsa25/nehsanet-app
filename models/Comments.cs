@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace nehsanet_app.models
+namespace nehsanet_app.Models
 {
     [Table("Comments")]
     public class DBComment(string username, string comment, string? page, int? commentid, string? ip = null)

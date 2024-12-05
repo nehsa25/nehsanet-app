@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace app.models
+namespace nehsanet_app.Models
 {
     [Table("Animal")]
     public class DBAnimal

@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using app.models;
 
-namespace nehsanet_app.models
+namespace nehsanet_app.Models
 {
     [Table("Names")]
     public class DBName

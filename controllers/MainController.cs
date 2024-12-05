@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
-using nehsanet_app.models;
+using nehsanet_app.Models;
 using nehsanet_app.utilities;
 using nehsanet_app.Types;
 

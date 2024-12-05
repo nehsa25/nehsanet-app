@@ -1,6 +1,6 @@
 using System.Data.Common;
 using MySqlConnector;
-using nehsanet_app.models;
+using nehsanet_app.Models;
 
 namespace nehsanet_app.utilities
 {

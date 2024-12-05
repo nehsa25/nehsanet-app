@@ -1,11 +1,9 @@
-
-using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
-using nehsanet_app.models;
 using nehsanet_app.utilities;
 using nehsanet_app.Types;
+using nehsanet_app.Models;
 
 namespace nehsanet_app.Controllers
 {
