@@ -9,17 +9,11 @@ using nehsanet_app.Types;
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class NamesController : ControllerBase
+    public class NamesController(DataContext context, ILoggingProvider logger) : ControllerBase
     {
-        private readonly ILoggingProvider _logger;
-        private readonly DataContext _context;
+        private readonly ILoggingProvider _logger = logger;
+        private readonly DataContext _context = context;
         readonly List<NameAbout> names = [];
-
-        public NamesController(DataContext context, ILoggingProvider logger)
-        {
-            _context = context;
-            _logger = logger;
-        }
 
         [HttpGet] // to access this: /Names
         [Route("/v1/names")]

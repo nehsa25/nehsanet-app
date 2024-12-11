@@ -5,18 +5,14 @@ using MySqlConnector;
 using nehsanet_app.Models;
 using nehsanet_app.utilities;
 using nehsanet_app.Types;
+using nehsanet_app.Services;
 
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class Main : ControllerBase
+    public class Main(ILoggingProvider logger) : ControllerBase
     {
-        private readonly ILogger _logger;
-      
-        public Main(ILogger<Main> logger)
-        {
-            _logger = logger;
-        }
+        private readonly ILoggingProvider _logger = logger;
 
         readonly List<string> quotes =
         [
@@ -148,7 +144,7 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetPositiveAdjective()
         {
-            _logger.LogInformation("Enter: GetPositiveAdjective() [GET]");
+            _logger.Log("Enter: GetPositiveAdjective() [GET]");
             int numToReturn = 15;
             int founditems = 0;
             string results = "";
@@ -165,7 +161,7 @@ namespace nehsanet_app.Controllers
             results = string.Join(", ", items);
             results += ". A sm&ouml;rg&aring;sbord of a human!";
             dynamic jsonresults = JsonSerializer.Serialize(results);
-            _logger.LogInformation($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
+            _logger.Log($"Exit: GetPositiveAdjective(): results: ${jsonresults}");
             return jsonresults;
         }
 
@@ -174,7 +170,7 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> GetWeather([FromQuery] string city, [FromQuery] string units, [FromQuery] string weatherType)
         {
-            _logger.LogInformation("Enter: GetWeather() [GET]: " + city + " " + units + " " + weatherType);
+            _logger.Log("Enter: GetWeather() [GET]: " + city + " " + units + " " + weatherType);
 
             // check city
             if (string.IsNullOrEmpty(city))
@@ -216,7 +212,7 @@ namespace nehsanet_app.Controllers
 
             string url = $"http://192.168.68.105:8080/{urlstem}";
             string content = "";
-            _logger.LogInformation($"GetWeather url: ${url}");
+            _logger.Log($"GetWeather url: ${url}");
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(url);
@@ -226,7 +222,7 @@ namespace nehsanet_app.Controllers
                     content = "City not found.";
             }
             dynamic jsonresults = JsonSerializer.Serialize(content);
-            _logger.LogInformation($"Exit: GetWeather(): results: ${jsonresults}");
+            _logger.Log($"Exit: GetWeather(): results: ${jsonresults}");
             return jsonresults;
         }
 
@@ -235,7 +231,7 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> Scraper([FromQuery] string scrapeUrl)
         {
-            _logger.LogInformation("Enter: Scraper() [GET]: " + scrapeUrl);
+            _logger.Log("Enter: Scraper() [GET]: " + scrapeUrl);
 
             // check city
             if (string.IsNullOrEmpty(scrapeUrl))
@@ -244,7 +240,7 @@ namespace nehsanet_app.Controllers
             string urlstem = $"scraper?url={scrapeUrl}";
             string url = $"http://192.168.68.105:8081/{urlstem}";
             string content = "";
-            _logger.LogInformation($"Scraper url: ${url}");
+            _logger.Log($"Scraper url: ${url}");
             using (var client = new HttpClient())
             {
                 var response = await client.GetAsync(url);
@@ -254,7 +250,7 @@ namespace nehsanet_app.Controllers
                     content = "Scape data not found.";
             }
             dynamic jsonresults = JsonSerializer.Serialize(content);
-            _logger.LogInformation($"Exit: Scraper(): results: ${jsonresults}");
+            _logger.Log($"Exit: Scraper(): results: ${jsonresults}");
             return jsonresults;
         }
 
@@ -263,9 +259,9 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string UpdateName(NameType namePerson)
         {
-            _logger.LogInformation("Enter: UpdateName() [POST]");
+            _logger.Log("Enter: UpdateName() [POST]");
             dynamic results = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson.Name);
-            _logger.LogInformation($"Exit: UpdateName(): results: ${JsonSerializer.Serialize(results)}");
+            _logger.Log($"Exit: UpdateName(): results: ${JsonSerializer.Serialize(results)}");
             return results;
         }
 
@@ -274,24 +270,24 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CometAI(AIQuestion aiQuestion)
         {
-            _logger.LogInformation("Enter: ai() [POST]");
+            _logger.Log("Enter: ai() [POST]");
             var client = new GeminiClient();
             var result = "";
 
             try
             {
-                _logger.LogInformation("ai() - sending request to Gemini: " + aiQuestion.Question);
+                _logger.Log("ai() - sending request to Gemini: " + aiQuestion.Question);
                 result = await client.TalkToGemini(aiQuestion.Question, aiQuestion.PreviousAnswer);
                 result = result.Replace("\n", " ");
-                _logger.LogInformation("ai() - received response from Gemini: " + result);
+                _logger.Log("ai() - received response from Gemini: " + result);
                 aiQuestion.Answer = result;
             }
             catch (Exception e)
             {
-                _logger.LogError($"Error: {e.Message}");
+                _logger.Log($"Error: {e.Message}");
             }
 
-            _logger.LogInformation($"Exit: ai(): aiQuestion: ${JsonSerializer.Serialize(aiQuestion)}");
+            _logger.Log($"Exit: ai(): aiQuestion: ${JsonSerializer.Serialize(aiQuestion)}");
             if (result != null)
             {
                 return Ok(aiQuestion);
@@ -307,9 +303,9 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public string GetQuote()
         {
-            _logger.LogInformation("Enter: GetQuote()");
+            _logger.Log("Enter: GetQuote()");
             dynamic results = JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
-            _logger.LogInformation($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
+            _logger.Log($"Exit: GetQuote(): results: ${JsonSerializer.Serialize(results)}");
             return results;
         }
 
@@ -318,11 +314,11 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> GetRelated([FromServices] MySqlDataSource db, [FromQuery] string page)
         {
-            _logger?.LogInformation("Enter: related [GET]");
+            _logger.Log("Enter: related [GET]");
             var connection = new RelatedPagesUtility(db, _logger);
             List<RelatedPages> db_result = await connection.GetRelatedPages(page);
             dynamic results = JsonSerializer.Serialize(db_result);
-            _logger?.LogInformation($"Exit: related: results: ${results}");
+            _logger.Log($"Exit: related: results: ${results}");
             return results;
         }
 
@@ -331,11 +327,11 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<string> GetDBHealth([FromServices] MySqlDataSource db)
         {
-            _logger?.LogInformation("Enter: GetDBHealth()");
+            _logger.Log("Enter: GetDBHealth()");
             var connection = new CommentsUtility(db, _logger);
             var db_result = await connection.GetLastXCommentsByPage("this_website", 1);
             dynamic results = JsonSerializer.Serialize(db_result);
-            _logger?.LogInformation($"Exit: GetDBHealth(): results: ${JsonSerializer.Serialize(results)}");
+            _logger.Log($"Exit: GetDBHealth(): results: ${JsonSerializer.Serialize(results)}");
             return results;
         }
     }

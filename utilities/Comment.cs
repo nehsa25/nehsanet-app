@@ -1,20 +1,23 @@
 using System.Data.Common;
 using MySqlConnector;
 using nehsanet_app.Models;
+using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities
 {
-    public class CommentsUtility(MySqlDataSource database, ILogger? _logger = null)
+    public class CommentsUtility(MySqlDataSource database, ILoggingProvider logger)
     {
+        private readonly ILoggingProvider _logger = logger;
+
         public async Task<DBComment?> GetSingleCommentById(int commentid)
         {
-            _logger?.LogInformation("Enter: GetComment/id [GET]");
+            _logger.Log("Enter: GetComment/id [GET]");
             using var connection = await database.OpenConnectionAsync();
             using var command = connection.CreateCommand();
             command.CommandText = @"SELECT `commentid`, `username`, `comment` FROM `comments` WHERE `commentid` = @commentid";
             command.Parameters.AddWithValue("@commentid", commentid);
             dynamic result = await GetComments(await command.ExecuteReaderAsync());
-            _logger?.LogInformation("Enter: GetComment/id [GET]");
+            _logger.Log("Enter: GetComment/id [GET]");
             return result.FirstOrDefault();
         }
 

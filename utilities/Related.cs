@@ -1,22 +1,25 @@
 using System.Data.Common;
 using MySqlConnector;
 using nehsanet_app.Models;
+using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities
 {
-    public class RelatedPagesUtility(MySqlDataSource database, ILogger? _logger = null)
+    public class RelatedPagesUtility(MySqlDataSource database, ILoggingProvider logger)
     {
+        private readonly ILoggingProvider _logger = logger;
+
         public async Task<List<RelatedPages>> GetRelatedPages(string pagename)
         {
-            _logger?.LogInformation("Enter: GetRelatedPages/pagename [GET]");
+            _logger.Log("Enter: GetRelatedPages/pagename [GET]");
             using var connection = await database.OpenConnectionAsync();
             using var command = connection.CreateCommand();
             command.CommandText = @"SELECT stem, title FROM related_pages rp join pages p on rp.related_page_id = p.id WHERE rp.page_id = (select id from pages where stem = @Page)";
             //command.CommandText = @"SELECT stem, title FROM related_pages rp join pages p on rp.related_page_id = p.id WHERE rp.page_id = (select id from pages where stem = @Page) OR rp.related_page_id = (select id from pages where stem = @Page)";
             command.Parameters.AddWithValue("@Page", pagename);
-            _logger?.LogInformation($"Interpolated command: {command.CommandText}");
+            _logger.Log($"Interpolated command: {command.CommandText}");
             List<RelatedPages> result = await ReadRelatedPages(await command.ExecuteReaderAsync());
-            _logger?.LogInformation("Enter: GetRelatedPages/pagename [GET]");
+            _logger.Log("Enter: GetRelatedPages/pagename [GET]");
             return result;
         }
 
