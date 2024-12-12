@@ -4,14 +4,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace nehsanet_app.Models
 {
     [Table("Comments")]
-    public class DBComment(string username, string comment, string? page, int? commentid, string? ip = null)
+    public class DBComment
     {
         [Key]
-        public int? CommentID { get; set; } = commentid;
-        public string Username { get; set; } = username;
-        public string Comment { get; set; } = comment;
-        public string Page { get; set; } = page ?? "";
-        public string IP { get; set; } = ip ?? "";
+        [Required]
+        public int? CommentID { get; set; }
+
+        [Required]
+        public string Username { get; set; } = "";
+
+        [Required]        
+        public string Comment { get; set; } = "";
+
+        [Required]
+        [ForeignKey("id")]
+        public string PageID { get; set; } = "";
+
+        [Required]
+        public string IP { get; set; } = "";
+
+        [Required]
         public DateTime Date { get; set; } = DateTime.Now;
+
+        public DBPage Page { get; set; } = null!;
     }
 }

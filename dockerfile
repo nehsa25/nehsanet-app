@@ -28,7 +28,11 @@ RUN apt install -y python3.11
 RUN apt install -y python3-pip
 COPY dontcheckin.py ./
 COPY requirements.txt ./
-RUN pip install -r requirements.txt --break-system-packages
+
+# # Create a cache volume
+VOLUME /root/.cache/pip
+
+RUN pip install -r requirements.txt --break-system-packages --no-cache-dir
 
 # Check the installed version of Python
 RUN python3.11 --version

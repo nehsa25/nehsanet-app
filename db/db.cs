@@ -8,6 +8,9 @@ namespace nehsanet_app.db
     {
         public DbSet<DBName> DBName { get; set; } = null!;
         public DbSet<DBAnimal> DBAnimal { get; set; } = null!;
+        public DbSet<DBComment> DBComment { get; set; } = null!;
+        public DbSet<DBPage> DBPage { get; set; } = null!;
+        public DbSet<DBRelatedPage> DBRelatedPage { get; set; } = null!;
         public DbSet<Log> Logs { get; set; } = null!;
         public DbSet<LogLevel> LogLevels { get; set; } = null!;
 
@@ -22,6 +25,25 @@ namespace nehsanet_app.db
                 .HasOne(l => l.LogLevel)
                 .WithMany()
                 .HasForeignKey(l => l.Level);
+
+            // many to many relationship between pages and related pages
+            modelBuilder.Entity<DBRelatedPage>()
+                .HasKey(pg => new { pg.page_id, pg.related_page_id });
+
+            modelBuilder.Entity<DBRelatedPage>()
+                .HasOne(pg => pg.Page)
+                .WithMany(p => p.RelatedPages)
+                .HasForeignKey(pg => pg.page_id);
+        }
+
+        public async Task<bool> CheckConnection()
+        {
+            await Task.Run(() =>
+            {
+                Database.OpenConnection();
+                Database.CloseConnection();
+            });
+            return true;
         }
     }
 }

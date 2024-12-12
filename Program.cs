@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 using nehsanet_app.db;
 using nehsanet_app.Services;
-using Serilog;
 
 namespace WebApp
 {
@@ -65,7 +63,6 @@ namespace WebApp
             webApplicationBuilder.Services.AddTransient<ILoggingProvider, LoggingProvider>();
 
             // Add MySQL support
-            webApplicationBuilder.Services.AddMySqlDataSource(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
             webApplicationBuilder.Services.AddDbContext<DataContext>(options =>
             {
                 options.UseMySQL(webApplicationBuilder.Configuration.GetConnectionString("Default")!);

@@ -1,6 +1,3 @@
-using System.Data.Common;
-using MySqlConnector;
-using nehsanet_app.Models;
 using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities

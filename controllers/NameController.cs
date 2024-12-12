@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
 using nehsanet_app.Services;
 using nehsanet_app.Types;
+using static nehsanet_app.utilities.ControllerUtility;
 
 namespace nehsanet_app.Controllers
 {
@@ -17,47 +18,84 @@ namespace nehsanet_app.Controllers
 
         [HttpGet] // to access this: /Names
         [Route("/v1/names")]
-        public async Task<ActionResult<IEnumerable<string>>> GetNames()
+        public async Task<ActionResult<ApiResponse>> GetNames()
         {
-            return await _context.DBName.Select(_ => _.Name).ToListAsync();
+            ApiResponse response = new();
+            response.Success = false;
+
+            try
+            {
+                response.Data = await _context.DBName.Select(_ => _.Name).ToListAsync();
+                response.Success = true;
+            }
+            catch (Exception e)
+            {
+                _logger.Log(e, "GetNames");
+            }
+
+            _logger.Log($"Exit: GetNames. Response success? {response.Success}");
+            return response;
         }
 
         [HttpGet]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> GetName()
+        public async Task<ActionResult<ApiResponse>> GetName()
         {
-            _logger.Log("Enter: names() [GET]");
-            string jsonresults = await _context.DBName.Select(_ => _.Name).FirstOrDefaultAsync() ?? "";
-            _logger.Log($"Exit: names(): results: {jsonresults}");
-            return jsonresults;
+            ApiResponse response = new();
+            response.Success = false;
+
+            try
+            {
+                _logger.Log("Enter: names() [GET]");
+                response.Data = await _context.DBName.Select(_ => _.Name).FirstOrDefaultAsync() ?? "";
+                response.Success = true;
+            }
+            catch (Exception e)
+            {
+                _logger.Log(e, "GetName");
+            }
+
+            _logger.Log($"Exit: GetName. Response success? {response.Success}");
+            return response;
         }
 
         [HttpGet]
         [Route("/v1/name/{numToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public List<dynamic> GetNames(int numToReturn)
+        public async Task<ActionResult<ApiResponse>> GetNames(int numToReturn)
         {
-            _logger.Log("Enter: names() [GET]");
-            List<NameAbout> names = (from name in _context.DBName                    
-                    select new NameAbout(name.Name, name.Description)).ToList();
+            ApiResponse response = new();
+            response.Success = false;
 
-            // Take two random names from the list
-             int founditems = 0;
-            List<dynamic> items = [];
-            while (founditems < numToReturn)
+            try
             {
-                dynamic item = names[Random.Shared.Next(names.Count)];
-                if (!items.Contains(item))
-                {
-                    items.Add(item);
-                    founditems++;
-                }
-            }
-            dynamic jsonresults = JsonSerializer.Serialize(items);
+                _logger.Log("Enter: names() [GET]");
+                List<NameAbout> names = (from name in _context.DBName
+                                         select new NameAbout(name.Name, name.Description)).ToList();
 
-            _logger.Log($"Exit: names(): results: ${JsonSerializer.Serialize(items)}");
-            return items;
+                // Take two random names from the list
+                int founditems = 0;
+                List<dynamic> items = [];
+                while (founditems < numToReturn)
+                {
+                    dynamic item = names[Random.Shared.Next(names.Count)];
+                    if (!items.Contains(item))
+                    {
+                        items.Add(item);
+                        founditems++;
+                    }
+                }
+                response.Data = JsonSerializer.Serialize(items);
+                response.Success = true;
+            }
+            catch (Exception e)
+            {
+                _logger.Log(e, "GetNames");
+            }
+
+            _logger.Log($"Exit: GetNames. Response success? {response.Success}");
+            return response;
         }
     }
 }

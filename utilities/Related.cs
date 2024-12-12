@@ -1,51 +1,36 @@
-using System.Data.Common;
-using MySqlConnector;
+using Microsoft.EntityFrameworkCore;
+using nehsanet_app.db;
 using nehsanet_app.Models;
 using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities
 {
-    public class RelatedPagesUtility(MySqlDataSource database, ILoggingProvider logger)
+    public class RelatedPagesUtility(DataContext context, ILoggingProvider logger)
     {
+        private readonly DataContext _context = context;
         private readonly ILoggingProvider _logger = logger;
 
-        public async Task<List<RelatedPages>> GetRelatedPages(string pagename)
+        public async Task<List<DBPage>> GetRelatedPages(string pagename)
         {
             _logger.Log("Enter: GetRelatedPages/pagename [GET]");
-            using var connection = await database.OpenConnectionAsync();
-            using var command = connection.CreateCommand();
-            command.CommandText = @"SELECT stem, title FROM related_pages rp join pages p on rp.related_page_id = p.id WHERE rp.page_id = (select id from pages where stem = @Page)";
-            //command.CommandText = @"SELECT stem, title FROM related_pages rp join pages p on rp.related_page_id = p.id WHERE rp.page_id = (select id from pages where stem = @Page) OR rp.related_page_id = (select id from pages where stem = @Page)";
-            command.Parameters.AddWithValue("@Page", pagename);
-            _logger.Log($"Interpolated command: {command.CommandText}");
-            List<RelatedPages> result = await ReadRelatedPages(await command.ExecuteReaderAsync());
-            _logger.Log("Enter: GetRelatedPages/pagename [GET]");
-            return result;
-        }
 
-        private static async Task<List<RelatedPages>> ReadRelatedPages(DbDataReader reader)
-        {
-            var pages = new List<RelatedPages>();
-            using (reader)
-            {
-                while (await reader.ReadAsync())
+
+            //command.CommandText = @"
+            //SELECT stem, title 
+            //FROM related_pages rp
+            //join pages p on rp.related_page_id = p.id 
+            //WHERE rp.page_id = (select id from pages where stem = @Page)";
+
+            var relatedPages = await _context.DBRelatedPage
+                .Include(_ => _.Page)
+                .Include(_ => _.RelatedPage)
+                .Where(rp => rp.Page.stem == pagename).Select(_ => new DBPage()
                 {
-                    string stem = reader.GetString(0);
-                    string title = reader.GetString(1);
-                    var post = new RelatedPages()
-                    {
-                        stem = stem,
-                        title = title
-                    };
-                    pages.Add(post);
-                }
-            }
-            return pages;
-        }
+                    stem = _.RelatedPage.stem,
+                    title = _.RelatedPage.title
+                }).ToListAsync();
 
-        private static void BindParams(MySqlCommand cmd, RelatedPages relatedPages)
-        {
-            cmd.Parameters.AddWithValue("@page", relatedPages.stem);
+            return relatedPages;
         }
     }
 }

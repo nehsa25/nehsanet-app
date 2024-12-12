@@ -27,5 +27,10 @@ namespace nehsanet_app.Services
             _context.Logs.Add(log);
             _context.SaveChanges();
         }
+
+        public void Log(Exception ex, string message, string user, string ip, int? level)
+        {
+            Log($"ERROR: {message} - {ex.Message}", user, ip, level);
+        }
     }
 }
