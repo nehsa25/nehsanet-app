@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
 using nehsanet_app.Services;
+using static nehsanet_app.Services.IUserSession;
 
 namespace WebApp
 {
@@ -61,6 +62,12 @@ namespace WebApp
 
             // Add logging provider
             webApplicationBuilder.Services.AddTransient<ILoggingProvider, LoggingProvider>();
+
+            // Add HTTP context accessor
+            webApplicationBuilder.Services.AddHttpContextAccessor();
+
+            // Add user session provider
+            webApplicationBuilder.Services.AddScoped<IUserSessionProvider, UserSessionProvider>();
 
             // Add MySQL support
             webApplicationBuilder.Services.AddDbContext<DataContext>(options =>

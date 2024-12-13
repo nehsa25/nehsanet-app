@@ -11,19 +11,18 @@ namespace nehsanet_app.Models
         public int? ID { get; set; }
 
         [Required]
-        public int Level { get; set; }
+        public int Log_LogLevelID { get; set; }
 
         [Required]
         [StringLength(10000, MinimumLength = 0)]
         public string Message { get; set; } = "";
 
         [Required]
-        [StringLength(256, MinimumLength = 0)]
-        public string User { get; set; } = "";
-
-        [Required]
         [StringLength(128, MinimumLength = 0)]
         public string IP { get; set; } = "";
+
+        [Required]
+        public long SessionID { get; set; }
 
         [Required]
         public DateTime Date { get; set; }

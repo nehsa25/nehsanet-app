@@ -24,7 +24,7 @@ namespace nehsanet_app.db
             modelBuilder.Entity<Log>()
                 .HasOne(l => l.LogLevel)
                 .WithMany()
-                .HasForeignKey(l => l.Level);
+                .HasForeignKey(l => l.Log_LogLevelID);
 
             // many to many relationship between pages and related pages
             modelBuilder.Entity<DBRelatedPage>()
