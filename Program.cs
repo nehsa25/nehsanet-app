@@ -87,7 +87,10 @@ namespace WebApp
                                                 "https://nehsa.net",
                                                 "https://www.nehsa.net",
                                                 "http://localhost:4200",
-                                                "https://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                                                "https://localhost:4200")
+                                    .AllowAnyMethod() // without this, only GET and POST are allowed.
+                                    .AllowAnyHeader() // without this, only the default headers are allowed.
+                                    .AllowCredentials();
                         });
                 });
 

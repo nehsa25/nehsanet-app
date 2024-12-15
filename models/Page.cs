@@ -1,24 +1,21 @@
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace nehsanet_app.Models
 {
-    [Table("page")]
-    public class DBPage()
+    [Table("pages")]
+    public class Page
     {
-        [Key]
-        [Required]
-        public int? id { get; set; }
-
-        [Required]
-        public string stem { get; set; } = "";
-
-        [Required]        
-        public string title { get; set; } = "";
-
-        [Required]
-        public DateTime date { get; set; } 
-
-        public List<DBRelatedPage> RelatedPages { get; set; } = new();
+        [Column("id")]
+        public int Id { get; set; }
+        [Column("stem")]
+        public string Stem { get; set; } = "";
+        [Column("title")]
+        public string Title { get; set; } = "";
+        [Column("date")]
+        public DateTime Date { get; set; }
+        public ICollection<RelatedPage> RelatedPagesNavigations { get; set; } = null!;
+        public ICollection<RelatedPage> RelatedPages { get; set; } = null!;
     }
 }

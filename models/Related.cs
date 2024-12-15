@@ -3,20 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace nehsanet_app.Models
 {
-     [Table("related_pages")]
-    public class DBRelatedPage()
+    [Table("related_pages")]
+    public class RelatedPage
     {
-        [Key]
-        [Required]
-        public int id { get; set; }
-
-        [Required]
-        public int page_id { get; set; }
-
-        [Required]
-        public string related_page_id { get; set; } = "";
-
-        public DBPage Page { get; set; } = null!;
-        public DBPage RelatedPage { get; set; } = null!;
+        [Column("id")]
+        public int Id { get; set; }
+        [Column("page_id")]
+        public int PageId { get; set; }
+        public Page Page { get; set; } = null!;
+        [Column("related_page_id")]
+        public int RelatedPageId { get; set; }
+        public Page RelatedPageNavigation { get; set; } = null!;
     }
 }

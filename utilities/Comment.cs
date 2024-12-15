@@ -25,7 +25,7 @@ namespace nehsanet_app.utilities
         {
             _logger.Log("Enter: GetComment/id [GET]");
             return await _context.DBComment.Include(c => c.Page)
-                .Where(c => c.Page.stem == page)
+                .Where(c => c.Page.Stem == page)
                 .OrderByDescending(c => c.CommentID)
                 .Take(numberToReturn)
                 .ToListAsync();

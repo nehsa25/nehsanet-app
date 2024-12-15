@@ -70,24 +70,27 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: names() [GET]");
-                List<NameAbout> names = (from name in _context.DBName
-                                         select new NameAbout(name.Name, name.Description)).ToList();
-
-                // Take two random names from the list
-                int founditems = 0;
-                List<dynamic> items = [];
-                while (founditems < numToReturn)
+                await Task.Run(() =>
                 {
-                    dynamic item = names[Random.Shared.Next(names.Count)];
-                    if (!items.Contains(item))
+                    _logger.Log("Enter: names() [GET]");
+                    List<NameAbout> names = (from name in _context.DBName
+                                             select new NameAbout(name.Name, name.Description)).ToList();
+
+                    // Take two random names from the list
+                    int founditems = 0;
+                    List<dynamic> items = [];
+                    while (founditems < numToReturn)
                     {
-                        items.Add(item);
-                        founditems++;
+                        dynamic item = names[Random.Shared.Next(names.Count)];
+                        if (!items.Contains(item))
+                        {
+                            items.Add(item);
+                            founditems++;
+                        }
                     }
-                }
-                response.Data = JsonSerializer.Serialize(items);
-                response.Success = true;
+                    response.Data = JsonSerializer.Serialize(items);
+                    response.Success = true;
+                });
             }
             catch (Exception e)
             {

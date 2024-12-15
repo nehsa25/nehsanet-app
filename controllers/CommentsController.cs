@@ -35,7 +35,7 @@ namespace nehsanet_app.Controllers
                 // WHERE p.stem = pageName
 
                 response.Data = await _context.DBComment.Include(c => c.Page)
-                    .Where(c => c.Page.stem == pageName)
+                    .Where(c => c.Page.Stem == pageName)
                     .OrderByDescending(c => c.CommentID)
                     .Take(numberToReturn)
                     .ToListAsync();

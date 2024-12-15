@@ -109,23 +109,26 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: GetPositiveAdjective() [GET]");
-                int numToReturn = 15;
-                int founditems = 0;
-                string results = "";
-                List<string> items = [];
-                while (founditems < numToReturn)
+                await Task.Run(() =>
                 {
-                    string item = positiveaffirmations[Random.Shared.Next(positiveaffirmations.Count)];
-                    if (!items.Contains(item))
+                    _logger.Log("Enter: GetPositiveAdjective() [GET]");
+                    int numToReturn = 15;
+                    int founditems = 0;
+                    string results = "";
+                    List<string> items = [];
+                    while (founditems < numToReturn)
                     {
-                        items.Add(item);
-                        founditems++;
+                        string item = positiveaffirmations[Random.Shared.Next(positiveaffirmations.Count)];
+                        if (!items.Contains(item))
+                        {
+                            items.Add(item);
+                            founditems++;
+                        }
                     }
-                }
-                results = string.Join(", ", items);
-                results += ". A sm&ouml;rg&aring;sbord of a human!";
-                response.Data = JsonSerializer.Serialize(results);
+                    results = string.Join(", ", items);
+                    results += ". A sm&ouml;rg&aring;sbord of a human!";
+                    response.Data = JsonSerializer.Serialize(results);
+                });
             }
             catch (Exception e)
             {
@@ -201,7 +204,7 @@ namespace nehsanet_app.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetRelated");
+                _logger.Log(e, "GetWeather");
             }
 
             _logger.Log($"Exit: GetWeather(): response: ${JsonSerializer.Serialize(response)}");
@@ -258,13 +261,16 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: UpdateName() [POST]");
-                response.Data = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson.Name);
-                response.Success = true;
+                await Task.Run(() =>
+                {
+                    _logger.Log("Enter: UpdateName() [POST]");
+                    response.Data = JsonSerializer.Serialize<string>("Not Implemented yet but you sent: " + namePerson.Name);
+                    response.Success = true;
+                });
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetRelated");
+                _logger.Log(e, "UpdateName");
             }
 
             _logger.Log($"Exit: UpdateName(): response: ${JsonSerializer.Serialize(response)}");
@@ -281,13 +287,16 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: GetQuote()");
-                response.Data = JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
-                response.Success = true;
+                await Task.Run(() =>
+                {
+                    _logger.Log("Enter: GetQuote()");
+                    response.Data = JsonSerializer.Serialize<string>(quotes[Random.Shared.Next(quotes.Count)]);
+                    response.Success = true;
+                });
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetRelated");
+                _logger.Log(e, "GetQuote");
             }
 
             _logger.Log($"Exit: GetQuote(): response: ${JsonSerializer.Serialize(response)}");
@@ -304,9 +313,10 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: related [GET]");
+                _logger.Log("Enter: GetRelated [GET]");
                 var connection = new RelatedPagesUtility(_context, _logger);
-                List<DBPage> db_result = await connection.GetRelatedPages(page);
+                List<Page> db_result = await connection.GetRelatedPages(page);
+                _logger.Log($"GetRelated: Found {db_result.Count} related pages.");
                 response.Data = JsonSerializer.Serialize(db_result);
                 response.Success = true;
             }

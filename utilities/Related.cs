@@ -10,27 +10,19 @@ namespace nehsanet_app.utilities
         private readonly DataContext _context = context;
         private readonly ILoggingProvider _logger = logger;
 
-        public async Task<List<DBPage>> GetRelatedPages(string pagename)
+        public async Task<List<Page>> GetRelatedPages(string pagename)
         {
-            _logger.Log("Enter: GetRelatedPages/pagename [GET]");
-
-
-            //command.CommandText = @"
-            //SELECT stem, title 
-            //FROM related_pages rp
-            //join pages p on rp.related_page_id = p.id 
-            //WHERE rp.page_id = (select id from pages where stem = @Page)";
-
-            var relatedPages = await _context.DBRelatedPage
-                .Include(_ => _.Page)
-                .Include(_ => _.RelatedPage)
-                .Where(rp => rp.Page.stem == pagename).Select(_ => new DBPage()
+            _logger.Log($"Enter: GetRelatedPages/pagename [GET]. pagename: {pagename}");
+            var pages = await _context.DBPage.Include(_ => _.RelatedPages)
+                .Include(_ => _.RelatedPages)
+                .Where(rp => rp.Title == pagename).Select(_ => new Page()
                 {
-                    stem = _.RelatedPage.stem,
-                    title = _.RelatedPage.title
+                    Stem = _.Stem,
+                    Title = _.Title
                 }).ToListAsync();
 
-            return relatedPages;
+            _logger.Log($"Exit: GetRelatedPages/pagename. Found {pages.Count} related pages.");
+            return pages;
         }
     }
 }

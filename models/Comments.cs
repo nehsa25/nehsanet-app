@@ -13,7 +13,7 @@ namespace nehsanet_app.Models
         [Required]
         public string Username { get; set; } = "";
 
-        [Required]        
+        [Required]
         public string Comment { get; set; } = "";
 
         [Required]
@@ -26,6 +26,6 @@ namespace nehsanet_app.Models
         [Required]
         public DateTime Date { get; set; } = DateTime.Now;
 
-        public DBPage Page { get; set; } = null!;
+        public Page Page { get; set; } = null!;
     }
 }
