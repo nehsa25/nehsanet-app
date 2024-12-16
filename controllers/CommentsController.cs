@@ -18,9 +18,9 @@ namespace nehsanet_app.Controllers
         readonly List<NameAbout> names = [];
 
         [HttpGet]
-        [Route("/v1/comment/{page}/{numberToReturn}")]
+        [Route("/v1/comment/{numberToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetComments(string pageName, int numberToReturn = 5)
+        public async Task<ActionResult<ApiResponse>> GetComments([FromQuery] string stem, int numberToReturn = 5)
         {
             ApiResponse response = new();
             response.Success = false;
@@ -29,13 +29,14 @@ namespace nehsanet_app.Controllers
             {
                 _logger.Log("Enter: GetComment/id [GET]");
 
-                // we need to do this in EF
-                // SELECT * FROM DBComments c
-                // JOIN DBPages p on c.PageID = p.id
-                // WHERE p.stem = pageName
+                if (string.IsNullOrWhiteSpace(stem))
+                    throw new Exception("Stem is required for GetComments");
 
-                response.Data = await _context.DBComment.Include(c => c.Page)
-                    .Where(c => c.Page.Stem == pageName)
+                if (!stem.StartsWith("/"))
+                    stem = "/" + stem;
+
+                response.Data = await _context.DBComment.Include(c => c.PageNavigation)
+                    .Where(c => c.PageNavigation.Stem == stem)
                     .OrderByDescending(c => c.CommentID)
                     .Take(numberToReturn)
                     .ToListAsync();
@@ -61,14 +62,27 @@ namespace nehsanet_app.Controllers
             try
             {
                 _logger.Log("Enter: PostComment [POST]");
-                if (HttpContext.Connection.RemoteIpAddress != null) {
+                if (HttpContext.Connection.RemoteIpAddress != null)
+                {
                     string ip = HttpContext.Connection.RemoteIpAddress.ToString();
                     _logger.Log($"Adding IP to commentPost: {ip}");
                     commentPost.IP = ip;
                 }
 
+                // add page id
+                if (commentPost.PageID == 0)
+                {
+                    _logger.Log("Finding page ID for commentPost");
+                    commentPost.PageID = await _context.DBPage
+                        .Where(p => p.Stem == commentPost.Stem)
+                        .Select(p => p.Id)
+                        .FirstOrDefaultAsync();
+                }
+
                 CommentsUtility commentsUtility = new(_logger, _context);
-                response.Success = await commentsUtility.AddComment(commentPost);
+                _context.DBComment.Add(commentPost);
+                int recordsAffected = await _context.SaveChangesAsync();
+                response.Success = recordsAffected > 0;
             }
             catch (Exception e)
             {

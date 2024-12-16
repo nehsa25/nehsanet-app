@@ -315,7 +315,7 @@ namespace nehsanet_app.Controllers
             {
                 _logger.Log("Enter: GetRelated [GET]");
                 var connection = new RelatedPagesUtility(_context, _logger);
-                List<Page> db_result = await connection.GetRelatedPages(page);
+                dynamic db_result = await connection.GetRelatedPages(page);
                 _logger.Log($"GetRelated: Found {db_result.Count} related pages.");
                 response.Data = JsonSerializer.Serialize(db_result);
                 response.Success = true;

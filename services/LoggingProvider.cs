@@ -29,7 +29,7 @@ namespace nehsanet_app.Services
                 Date = DateTime.Now,
                 Log_LogLevelID = level ?? 1
             };
-                                                    
+            Console.WriteLine(message);                                                    
             _context.Logs.Add(log);
             _context.SaveChanges();
         }

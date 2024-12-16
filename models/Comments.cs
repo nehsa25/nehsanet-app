@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace nehsanet_app.Models
 {
-    [Table("Comments")]
+    [Table("Comment")]
     public class DBComment
     {
         [Key]
-        [Required]
         public int? CommentID { get; set; }
 
         [Required]
@@ -16,16 +17,18 @@ namespace nehsanet_app.Models
         [Required]
         public string Comment { get; set; } = "";
 
-        [Required]
         [ForeignKey("id")]
-        public string PageID { get; set; } = "";
+        public int PageID { get; set; }
 
         [Required]
+        [NotMapped]
+        public string Stem { get; set; } = "";
+
         public string IP { get; set; } = "";
+        public DateTime DateUTC { get; set; } = DateTime.Now;
 
-        [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
-
-        public Page Page { get; set; } = null!;
+        [JsonIgnore]
+        [ValidateNever]
+        public Page PageNavigation { get; set; } = null!;
     }
 }

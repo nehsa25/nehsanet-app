@@ -24,18 +24,11 @@ namespace nehsanet_app.utilities
         public async Task<IReadOnlyList<DBComment>> GetLastXCommentsByPage(string page, int numberToReturn)
         {
             _logger.Log("Enter: GetComment/id [GET]");
-            return await _context.DBComment.Include(c => c.Page)
-                .Where(c => c.Page.Stem == page)
+            return await _context.DBComment.Include(c => c.PageNavigation)
+                .Where(c => c.PageNavigation.Stem == page)
                 .OrderByDescending(c => c.CommentID)
                 .Take(numberToReturn)
                 .ToListAsync();
-        }
-
-        public async Task<bool> AddComment(DBComment CommentPost)
-        {
-            _logger.Log("Enter: AddComment [POST]");            
-            _context.DBComment.Add(CommentPost);
-            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

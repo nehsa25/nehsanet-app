@@ -15,7 +15,7 @@ namespace nehsanet_app.Models
         public string Title { get; set; } = "";
         [Column("date")]
         public DateTime Date { get; set; }
-        public ICollection<RelatedPage> RelatedPagesNavigations { get; set; } = null!;
-        public ICollection<RelatedPage> RelatedPages { get; set; } = null!;
+        public List<RelatedPage> RelatedPagesNavigations { get; set; } = null!;
+        public List<RelatedPage> RelatedPages { get; set; } = null!;
     }
 }
