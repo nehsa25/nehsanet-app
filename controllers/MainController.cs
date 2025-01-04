@@ -189,7 +189,7 @@ namespace nehsanet_app.Controllers
                         break;
                 }
 
-                string url = $"http://192.168.68.105:8080/{urlstem}";
+                string url = $"http://192.168.68.79:8080/{urlstem}";
                 _logger.Log($"GetWeather url: ${url}");
                 using (var client = new HttpClient())
                 {
@@ -228,7 +228,7 @@ namespace nehsanet_app.Controllers
                     throw new ArgumentNullException(nameof(scrapeUrl), "url is required.");
 
                 string urlstem = $"scraper?url={scrapeUrl}";
-                string url = $"http://192.168.68.105:8081/{urlstem}";
+                string url = $"http://192.168.68.79:8081/{urlstem}";
                 string content = "";
                 _logger.Log($"Scraper url: ${url}");
                 using (var client = new HttpClient())

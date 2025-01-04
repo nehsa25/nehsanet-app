@@ -27,7 +27,7 @@ namespace WebApp
             {
                 // Redirect all other requests to Angular's index.html
                 Console.WriteLine("Directing to Angular SPA");
-                context.Response.StatusCode = StatusCodes.Status302Found;
+                context.Response.StatusCode = StatusCodes.Status200OK;
                 context.Response.Headers.Location = "/";
             }
         }
