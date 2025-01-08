@@ -79,7 +79,7 @@ namespace nehsanet_app.Controllers
             "Passionate",
             "Sincere",
             "Wise",
-            "Tent Camper (someday pop-up tent camper!)",
+            "Camper",
             "Neighborhood Rollerblader",
             "Developer",
             "Student",
@@ -95,8 +95,7 @@ namespace nehsanet_app.Controllers
             "Nice",
             "Skier",
             "Book-Reader",
-            "Learner",
-            "a <a href=\"https://synthridersvr.com/\">Synth-Rider</a>"
+            "Learner"
         ];
 
         [HttpGet]
@@ -126,7 +125,7 @@ namespace nehsanet_app.Controllers
                         }
                     }
                     results = string.Join(", ", items);
-                    results += ". A sm&ouml;rg&aring;sbord of a human!";
+                    results += ".";
                     response.Data = JsonSerializer.Serialize(results);
                 });
             }
