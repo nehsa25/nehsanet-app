@@ -53,7 +53,8 @@ namespace nehsanet_app.Controllers
             "Let Bygones be Bygones.",
             "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt",
             "“You will continue to suffer if you have an emotional reaction to everything that is said to you.” - Warren Buffett",
-            "“Breathe and allow things to pass.” - Warren Buffett"
+            "“Breathe and allow things to pass.” - Warren Buffett",
+            "“Let everything happen to you: beauty and terror. Just keep going. No feeling is final.” - Rainer Maria Rilke",
         ];
 
         readonly List<string> positiveaffirmations =
