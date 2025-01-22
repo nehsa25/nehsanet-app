@@ -10,9 +10,9 @@ using static nehsanet_app.utilities.ControllerUtility;
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class NamesController(DataContext context, ILoggingProvider logger) : ControllerBase
+    public class NamesController(DataContext context, ILogger<NamesController> logger) : ControllerBase
     {
-        private readonly ILoggingProvider _logger = logger;
+        private readonly ILogger _logger = logger;
         private readonly DataContext _context = context;
         readonly List<NameAbout> names = [];
 
@@ -30,10 +30,10 @@ namespace nehsanet_app.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetNames");
+                _logger.LogInformation(e, "GetNames");
             }
 
-            _logger.Log($"Exit: GetNames. Response success? {response.Success}");
+            _logger.LogInformation("Exit: GetNames. Response success: {s}", response.Success);
             return response;
         }
 
@@ -47,16 +47,16 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: names() [GET]");
+                _logger.LogInformation("Enter: names() [GET]");
                 response.Data = await _context.DBName.Select(_ => _.Name).FirstOrDefaultAsync() ?? "";
                 response.Success = true;
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetName");
+                _logger.LogInformation(e, "GetName");
             }
 
-            _logger.Log($"Exit: GetName. Response success? {response.Success}");
+            _logger.LogInformation("Exit: GetName. Response success: {s}", response.Success);
             return response;
         }
 
@@ -72,7 +72,7 @@ namespace nehsanet_app.Controllers
             {
                 await Task.Run(() =>
                 {
-                    _logger.Log("Enter: names() [GET]");
+                    _logger.LogInformation("Enter: names() [GET]");
                     List<NameAbout> names = (from name in _context.DBName
                                              select new NameAbout(name.Name, name.Description)).ToList();
 
@@ -94,10 +94,10 @@ namespace nehsanet_app.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetNames");
+                _logger.LogInformation(e, "GetNames");
             }
 
-            _logger.Log($"Exit: GetNames. Response success? {response.Success}");
+            _logger.LogInformation("Exit: GetNames. Response success: {r}", response.Success);
             return response;
         }
     }

@@ -8,10 +8,10 @@ using nehsanet_app.db;
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class AIController(ILoggingProvider logger, DataContext context) : ControllerBase
+    public class AIController(ILogger<AIController> logger, DataContext context) : ControllerBase
     {
         private readonly DataContext _context = context;
-        private readonly ILoggingProvider _logger = logger;
+        private readonly ILogger _logger = logger;
 
         public class GeminiClient
         {
@@ -62,24 +62,24 @@ namespace nehsanet_app.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CometAI(AIQuestion aiQuestion)
         {
-            _logger.Log("Enter: ai() [POST]");
+            _logger.LogInformation("Enter: ai() [POST]");
             var client = new GeminiClient();
             var result = "";
 
             try
             {
-                _logger.Log("ai() - sending request to Gemini: " + aiQuestion.Question);
+                _logger.LogInformation("ai() - sending request to Gemini: {question}", aiQuestion.Question);
                 result = await client.TalkToGemini(aiQuestion.Question, aiQuestion.PreviousAnswer);
                 result = result.Replace("\n", " ");
-                _logger.Log("ai() - received response from Gemini: " + result);
+                _logger.LogInformation("ai() - received response from Gemini: {result}", result);
                 aiQuestion.Answer = result;
             }
             catch (Exception e)
             {
-                _logger.Log($"Error: {e.Message}");
+                _logger.LogInformation("Error: {message}", e.Message);
             }
 
-            _logger.Log($"Exit: ai(): aiQuestion: ${JsonSerializer.Serialize(aiQuestion)}");
+            _logger.LogInformation("Exit: ai(): aiQuestion: {question}",  JsonSerializer.Serialize(aiQuestion));
             if (result != null)
             {
                 return Ok(aiQuestion);

@@ -2,9 +2,9 @@ using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities
 {
-    public class ControllerUtility(ILoggingProvider logger)
+    public class ControllerUtility(ILogger logger)
     {
-        private readonly ILoggingProvider _logger = logger;
+        private readonly ILogger _logger = logger;
 
         public class ApiResponse
         {

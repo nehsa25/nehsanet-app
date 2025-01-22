@@ -1,6 +1,12 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
 using nehsanet_app.Services;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using static nehsanet_app.Services.IUserSession;
 
 namespace WebApp
@@ -58,10 +64,11 @@ namespace WebApp
             webApplicationBuilder.Services.AddSwaggerGen();
             webApplicationBuilder.Services.AddHealthChecks();
             webApplicationBuilder.Services.AddControllers();
-            webApplicationBuilder.Services.AddLogging();
 
-            // Add logging provider
-            webApplicationBuilder.Services.AddTransient<ILoggingProvider, LoggingProvider>();
+            // Logging support 
+            webApplicationBuilder.Logging.ClearProviders();
+            webApplicationBuilder.Logging.AddConsole();
+            webApplicationBuilder.Logging.AddDebug();
 
             // Add HTTP context accessor
             webApplicationBuilder.Services.AddHttpContextAccessor();
@@ -77,27 +84,61 @@ namespace WebApp
 
             // CORS support
             webApplicationBuilder.Services.AddCors(options =>
-                {
-                    options.AddDefaultPolicy(
-                        policy =>
-                        {
-                            policy.WithOrigins("http://nehsa.net",
-                                                "http://www.nehsa.net",
-                                                "https://mud.nehsa.net",
-                                                "https://nehsa.net",
-                                                "https://www.nehsa.net",
-                                                "http://localhost:4200",
-                                                "https://localhost:4200")
-                                    .AllowAnyMethod() // without this, only GET and POST are allowed.
-                                    .AllowAnyHeader() // without this, only the default headers are allowed.
-                                    .AllowCredentials();
-                        });
-                });
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://nehsa.net",
+                                            "http://www.nehsa.net",
+                                            "https://mud.nehsa.net",
+                                            "https://nehsa.net",
+                                            "https://www.nehsa.net",
+                                            "http://localhost:4200",
+                                            "https://localhost:4200")
+                                .AllowAnyMethod() // without this, only GET and POST are allowed.
+                                .AllowAnyHeader() // without this, only the default headers are allowed.
+                                .AllowCredentials();
+                    });
+            });
 
-            // Logging support
-            webApplicationBuilder.Logging.ClearProviders();
-            webApplicationBuilder.Logging.AddConsole();
-            webApplicationBuilder.Logging.AddDebug();
+            // Add OpenTelemetry support
+            const string serviceName = "nehsanet_app";
+            webApplicationBuilder.Logging.AddOpenTelemetry(_ =>
+            {
+                _
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(serviceName))
+                    .AddConsoleExporter();
+
+                _.IncludeScopes = true; // include scope information
+                _.IncludeFormattedMessage = true;
+                _.AddOtlpExporter(exporter =>
+                    {
+                        exporter.Endpoint = new Uri("http://192.168.68.79:5341/ingest/otlp/v1/logs");
+                        exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
+                        exporter.Headers = $"X-Seq-ApiKey={nehsanet_app.Secrets.Seq.ApiKey}";
+                    });
+            });
+
+            webApplicationBuilder.Services.AddOpenTelemetry()
+                  .ConfigureResource(
+                    resource =>
+                    {
+                        resource.AddService(serviceName);
+                        resource.AddAttributes(new Dictionary<string, object>()
+                        {
+                            ["deployment.environment"] = webApplicationBuilder.Environment.EnvironmentName,
+                            ["version"] = DateTime.Now.DayOfYear.ToString(),
+                            ["machine.hostname"] = Environment.MachineName
+                        });
+                    })
+                  .WithTracing(tracing => tracing
+                      .AddAspNetCoreInstrumentation()
+                      .AddConsoleExporter())
+                  .WithMetrics(metrics => metrics
+                      .AddAspNetCoreInstrumentation()
+                      .AddConsoleExporter());
 
             var app = webApplicationBuilder.Build();
 

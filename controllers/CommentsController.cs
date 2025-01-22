@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore;
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class CommentsControler(ILoggingProvider logger, DataContext context) : ControllerBase
+    public class CommentsControler(ILogger<CommentsControler> logger, DataContext context) : ControllerBase
     {
-        private readonly ILoggingProvider _logger = logger;
+        private readonly ILogger _logger = logger;
         private readonly DataContext _context = context;
         readonly List<NameAbout> names = [];
 
@@ -27,7 +27,7 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: GetComment/id [GET]");
+                _logger.LogInformation("Enter: GetComment/id [GET]");
 
                 if (string.IsNullOrWhiteSpace(stem))
                     throw new Exception("Stem is required for GetComments");
@@ -45,10 +45,10 @@ namespace nehsanet_app.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log(e, "GetComments");
+                _logger.LogInformation(e, "GetComments");
             }
 
-            _logger.Log($"Exit: GetComment/id. Response success? {response.Success}");
+            _logger.LogInformation("Exit: GetComment/id. Response success: {success}", response.Success);
             return response;
         }
 
@@ -61,18 +61,18 @@ namespace nehsanet_app.Controllers
 
             try
             {
-                _logger.Log("Enter: PostComment [POST]");
+                _logger.LogInformation("Enter: PostComment [POST]");
                 if (HttpContext.Connection.RemoteIpAddress != null)
                 {
                     string ip = HttpContext.Connection.RemoteIpAddress.ToString();
-                    _logger.Log($"Adding IP to commentPost: {ip}");
+                    _logger.LogInformation("Adding IP to commentPost: {ip}", ip);
                     commentPost.IP = ip;
                 }
 
                 // add page id
                 if (commentPost.PageID == 0)
                 {
-                    _logger.Log("Finding page ID for commentPost");
+                    _logger.LogInformation("Finding page ID for commentPost");
                     commentPost.PageID = await _context.DBPage
                         .Where(p => p.Stem == commentPost.Stem)
                         .Select(p => p.Id)
@@ -86,11 +86,11 @@ namespace nehsanet_app.Controllers
             }
             catch (Exception e)
             {
-                _logger.Log($"Error: PostComment: {e.Message}");
+                _logger.LogInformation("Error: PostComment: {message}", e.Message);
                 response.Success = false;
             }
 
-            _logger.Log($"Exit: PostComment. Response: {JsonSerializer.Serialize(response)}");
+            _logger.LogInformation("Exit: PostComment. Response: {response}", JsonSerializer.Serialize(response));
             return response;
         }
     }
