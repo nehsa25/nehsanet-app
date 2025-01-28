@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using nehsanet_app.db;
 using nehsanet_app.Services;
 using OpenTelemetry.Exporter;
@@ -149,10 +149,10 @@ namespace WebApp
             app.UseExceptionHandler("/Error"); // handle exceptions
             app.UseSwagger(); // setup swagger, this is different than UseSWaggerUI in that it just sets up the middleware
             app.UseSwaggerUI(); // setup swagger UI, this is the UI that is used to view the API
-            app.UseHealthChecks("/health"); // setup health checks using the default health check middleware
             app.UseRouting(); // This configues the routing middleware
             app.UseStaticFiles(); // allow us to serve map images
             app.MapControllers(); // This maps the controllers to the routing middleware. e.g. without this, the controllers will not be called
+            app.MapHealthChecks("/v1/health"); // This maps the health checks to the routing middleware
 
             // set to use CORS
             logger.LogInformation("Setting up CORS for API");
@@ -160,6 +160,8 @@ namespace WebApp
 
             // start app
             logger.LogInformation("Starting Application!");
+
+            // launch with healthcheck page
             app.Run();
         }
     }
