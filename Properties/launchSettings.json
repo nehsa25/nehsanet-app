@@ -1,20 +1,12 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:9919",
-      "sslPort": 44337
-    }
-  },
   "profiles": {
-    "https": {
+    "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://api.nehsa.net:443",
+      "applicationUrl": "http://127.0.0.1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
