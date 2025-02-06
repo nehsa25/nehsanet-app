@@ -1,5 +1,5 @@
-
 # Use the official .NET Core SDK as a parent image
+<<<<<<< HEAD
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS base 
 ARG TARGETARCH
 WORKDIR /app
@@ -13,35 +13,37 @@ COPY . .
 
 # Publish the application
 RUN dotnet publish -c Release -o out -a $TARGETARCH
+=======
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS base 
+WORKDIR /app 
+COPY *.csproj ./ 
+RUN dotnet restore 
+COPY . . 
+RUN dotnet publish -c Release -o out 
+>>>>>>> efa91381c05b159c88b5743dcb8f1e96b040ceb3
 
 # Build the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 
 WORKDIR /app
+COPY --from=base /app/out ./
+ENV ASPNETCORE_URLS=http://*:22007 
+EXPOSE 22007/tcp 
+
+RUN apk add --no-cache python3 py3-pip
+
+# Install required packages
+# Update package lists
+COPY dontcheckin.py ./
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt --break-system-packages --no-cache-dir
+
+# Check the installed version of Python
+RUN python3 --version
 
 COPY --from=base /app/out ./
 
-# Update package lists
-RUN apt update && \
-    apt upgrade -y
-
-# Install required packages
-RUN apt install -y python3.11
-RUN apt install -y python3-pip
-COPY dontcheckin.py ./
-COPY requirements.txt ./
-
-# # Create a cache volume
-VOLUME /root/.cache/pip
-
-RUN pip install -r requirements.txt --break-system-packages --no-cache-dir
-
-# Check the installed version of Python
-RUN python3.11 --version
-
+# For Comet AI
 COPY talk.py /app
 
-EXPOSE 22007/tcp
-
 # Start the application
-# "dotnet nehsanet-app.dll --server.urls http://*/22007
-ENTRYPOINT ["dotnet", "nehsanet-app.dll","--server.urls","http://*/22007"]
+ENTRYPOINT ["dotnet", "nehsanet-app.dll"]  
