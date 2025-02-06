@@ -115,7 +115,7 @@ namespace WebApp
                 _.IncludeFormattedMessage = true;
                 _.AddOtlpExporter(exporter =>
                     {
-                        exporter.Endpoint = new Uri("http://192.168.68.79:5341/ingest/otlp/v1/logs");
+                        exporter.Endpoint = new Uri("http://omen-pc:5341/ingest/otlp/v1/logs");
                         exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
                         exporter.Headers = $"X-Seq-ApiKey={nehsanet_app.Secrets.Seq.ApiKey}";
                     });
