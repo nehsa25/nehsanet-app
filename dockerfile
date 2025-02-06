@@ -1,17 +1,18 @@
 
 # Use the official .NET Core SDK as a parent image
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS base 
+ARG TARGETARCH
 WORKDIR /app
 
 # Copy the project file and restore any dependencies (use .csproj for the project name)
 COPY *.csproj ./
-RUN dotnet restore
+RUN dotnet restore -a $TARGETARCH
 
 # Copy the rest of the application code
 COPY . .
 
 # Publish the application
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out -a $TARGETARCH
 
 # Build the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

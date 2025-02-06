@@ -42,7 +42,6 @@ namespace nehsanet_app.Controllers
             "“If I want to contact my friends, I have to email them...like I'm a pilgrim!” - Seaside, Oregon Resident",
             "Find win-wins.",
             "“YES!” - Gimli",
-            "[object Object]",
             "“I am a large, semi-muscular man. I can take it.” - Wash",
             "“Anyone who has never made a mistake has never tried anything new.” - Albert Einstein",
             "“I believe in a thing called love, hoo-ooh!” - The Darkness",
@@ -189,7 +188,7 @@ namespace nehsanet_app.Controllers
                         break;
                 }
 
-                string url = $"http://192.168.68.79:8080/{urlstem}";
+                string url = $"http://omen-pc:8080/{urlstem}";
                 _logger.LogInformation("GetWeather url: {url}", url);
                 using (var client = new HttpClient())
                 {
@@ -228,7 +227,7 @@ namespace nehsanet_app.Controllers
                     throw new ArgumentNullException(nameof(scrapeUrl), "url is required.");
 
                 string urlstem = $"scraper?url={scrapeUrl}";
-                string url = $"http://192.168.68.79:8081/{urlstem}";
+                string url = $"http://omen-pc:8081/{urlstem}";
                 string content = "";
                 _logger.LogInformation("Scraper url: {url}", url);
                 using (var client = new HttpClient())
