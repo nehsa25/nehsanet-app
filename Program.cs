@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using nehsanet_app.db;
 using nehsanet_app.Services;
 using OpenTelemetry.Exporter;
