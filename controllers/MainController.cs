@@ -37,7 +37,6 @@ namespace nehsanet_app.Controllers
             "“When the elevator tries to bring you down, go crazy!” - Prince",
             "“I get knocked down, but I get up again.” - Chumbawamba",
             "“It's nice and quiet, but soon again, starts another big riot.” - Bj&#xf6;rk",
-            "“May the swamp be gentle.” - Google Gemini",
             "“Shoulda Coulda Woulda” - Jayne Cobb",
             "“If I want to contact my friends, I have to email them...like I'm a pilgrim!” - Seaside, Oregon Resident",
             "Find win-wins.",

@@ -61,3 +61,4 @@ dontcheckin.go
 
 publish.ps1
 .vscode/tasks.json
+.vs/
