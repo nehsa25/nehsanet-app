@@ -52,7 +52,9 @@ namespace nehsanet_app.Controllers
             "“The only person who never makes mistakes is the person who never does anything.” - Theodore Roosevelt",
             "“You will continue to suffer if you have an emotional reaction to everything that is said to you.” - Warren Buffett",
             "“Breathe and allow things to pass.” - Warren Buffett",
-            "“Let everything happen to you: beauty and terror. Just keep going. No feeling is final.” - Rainer Maria Rilke"
+            "“Let everything happen to you: beauty and terror. Just keep going. No feeling is final.” - Rainer Maria Rilke",
+            "“Take me as I come 'cause I can't stay long.” - Tom Petty and the Heartbreakers",
+            "rm -recurse .\\node_modules\\; rm .\\package-lock.json; npm install"            
         ];
 
         readonly List<string> positiveaffirmations =
