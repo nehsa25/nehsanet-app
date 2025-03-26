@@ -1,26 +1,28 @@
-using System.Runtime.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
-using nehsanet_app.Services;
+using nehsanet_app.Models;
 using nehsanet_app.Types;
-using static nehsanet_app.utilities.ControllerUtility;
 
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class NamesController(DataContext context, ILogger<NamesController> logger) : ControllerBase
+    public class NamesController(
+        DataContext context, ILogger<NamesController> logger,
+        IHttpContextAccessor httpContextAccessor
+        ) : ControllerBase
     {
         private readonly ILogger _logger = logger;
         private readonly DataContext _context = context;
         readonly List<NameAbout> names = [];
 
-        [HttpGet] // to access this: /Names
+        [HttpGet] 
         [Route("/v1/names")]
-        public async Task<ActionResult<ApiResponse>> GetNames()
+        public async Task<ActionResult<ApiResponseGeneric>> GetNames()
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -40,9 +42,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetName()
+        public async Task<ActionResult<ApiResponseGeneric>> GetName()
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -63,34 +65,36 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/name/{numToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetNames(int numToReturn)
+        public async Task<ActionResult<ApiResponseName>> GetNames(int numToReturn)
         {
-            ApiResponse response = new();
-            response.Success = false;
+            ApiResponseName response = new()
+            {
+                Success = false,
+                Names = []
+            };
 
             try
             {
-                await Task.Run(() =>
-                {
-                    _logger.LogInformation("Enter: names() [GET]");
-                    List<NameAbout> names = (from name in _context.DBName
-                                             select new NameAbout(name.Name, name.Description)).ToList();
+                _logger.LogInformation("Enter: names() [GET]");
+                List<NameAbout> names = await _context.DBName
+                    .Select(name => new NameAbout(name.Name, name.Description))
+                    .ToListAsync();
 
-                    // Take two random names from the list
-                    int founditems = 0;
-                    List<dynamic> items = [];
-                    while (founditems < numToReturn)
+                // Take two random names from the list
+                int founditems = 0;
+                List<NameAbout> items = [];
+                while (founditems < numToReturn)
+                {
+                    dynamic item = names[Random.Shared.Next(names.Count)];
+                    if (!items.Contains(item))
                     {
-                        dynamic item = names[Random.Shared.Next(names.Count)];
-                        if (!items.Contains(item))
-                        {
-                            items.Add(item);
-                            founditems++;
-                        }
+                        items.Add(item);
+                        founditems++;
                     }
-                    response.Data = JsonSerializer.Serialize(items);
-                    response.Success = true;
-                });
+                }
+                response.Names = items;
+                response.Success = true;
+                response.IP = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
             }
             catch (Exception e)
             {

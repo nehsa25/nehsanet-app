@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
 using nehsanet_app.Models;
-using nehsanet_app.Services;
 
 namespace nehsanet_app.utilities
 {

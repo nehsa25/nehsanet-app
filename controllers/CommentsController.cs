@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using nehsanet_app.utilities;
 using nehsanet_app.Types;
 using nehsanet_app.Models;
-using nehsanet_app.Services;
-using static nehsanet_app.utilities.ControllerUtility;
 using nehsanet_app.db;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +18,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/comment/{numberToReturn}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetComments([FromQuery] string stem, int numberToReturn = 5)
+        public async Task<ActionResult<ApiResponseGeneric>> GetComments([FromQuery] string stem, int numberToReturn = 5)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -55,9 +53,9 @@ namespace nehsanet_app.Controllers
         [HttpPost]
         [Route("/v1/comment")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> PostComment([FromBody] DBComment commentPost)
+        public async Task<ActionResult<ApiResponseGeneric>> PostComment([FromBody] DBComment commentPost)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
 
             try
             {

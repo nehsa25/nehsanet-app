@@ -7,6 +7,10 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using static nehsanet_app.Services.IUserSession;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
 
 namespace WebApp
 {
@@ -81,6 +85,41 @@ namespace WebApp
                 options.UseMySQL(webApplicationBuilder.Configuration.GetConnectionString("Default")!);
             });
 
+            // Add authentication support
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = "NehsaAPI",
+                ValidAudience = "nehsa",
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(
+                            Environment.GetEnvironmentVariable("NEHSA_JWT_SECURITY_KEY") ?? ""))
+            };
+
+            webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = tokenValidationParameters;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = async ctx =>
+                        {
+                            var userSession = ctx.HttpContext.RequestServices.GetRequiredService<IUserSessionProvider>();
+                            await userSession.SetSession(ctx.Principal!);
+                        }
+                    };
+                });
+
+            // Add authorization support
+            webApplicationBuilder.Services.AddAuthorizationBuilder()
+                .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
+                .AddPolicy("New", policy => policy.RequireRole("New"))
+                .AddPolicy("User", policy => policy.RequireRole("User"));
+
             // CORS support
             webApplicationBuilder.Services.AddCors(options =>
             {
@@ -114,7 +153,7 @@ namespace WebApp
                 _.IncludeFormattedMessage = true;
                 _.AddOtlpExporter(exporter =>
                     {
-                        exporter.Endpoint = new Uri("http://omen-pc:5341/ingest/otlp/v1/logs");
+                        exporter.Endpoint = new Uri("http://127.0.0.1:5341/ingest/otlp/v1/logs");
                         exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
                         exporter.Headers = $"X-Seq-ApiKey={nehsanet_app.Secrets.Seq.ApiKey}";
                     });
@@ -148,7 +187,7 @@ namespace WebApp
             app.UseExceptionHandler("/Error"); // handle exceptions
             app.UseSwagger(); // setup swagger, this is different than UseSWaggerUI in that it just sets up the middleware
             app.UseSwaggerUI(); // setup swagger UI, this is the UI that is used to view the API
-            app.UseRouting(); // This configues the routing middleware
+            app.UseRouting(); // This configures the routing middleware
             app.UseStaticFiles(); // allow us to serve map images
             app.MapControllers(); // This maps the controllers to the routing middleware. e.g. without this, the controllers will not be called
             app.MapHealthChecks("/v1/health"); // This maps the health checks to the routing middleware

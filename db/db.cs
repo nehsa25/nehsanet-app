@@ -13,6 +13,9 @@ namespace nehsanet_app.db
         public DbSet<RelatedPage> DBRelatedPage { get; set; } = null!;
         public DbSet<Log> Logs { get; set; } = null!;
         public DbSet<LogLevel> LogLevels { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
+        public DbSet<UserEvent> UserEvents { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using nehsanet_app.Types;
-using nehsanet_app.Services;
 using nehsanet_app.db;
 
 namespace nehsanet_app.Controllers

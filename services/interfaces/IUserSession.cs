@@ -1,5 +1,3 @@
-using nehsanet_app.Models;
-
 namespace nehsanet_app.Services
 {
     public interface IUserSession
@@ -8,7 +6,7 @@ namespace nehsanet_app.Services
         {
             public string IP { get; set; }
             public long SessionID { get; set; }
-            public void SetSession();
+            public Task SetSession(System.Security.Claims.ClaimsPrincipal user);
         }
     }
 }

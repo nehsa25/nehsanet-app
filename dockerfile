@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS base 
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS base 
 WORKDIR /app 
 COPY *.csproj ./ 
 RUN dotnet restore 
@@ -6,7 +6,7 @@ COPY . .
 RUN dotnet publish -c Release -o out 
 
 # Build the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime 
 WORKDIR /app
 COPY --from=base /app/out ./
 ENV ASPNETCORE_URLS=http://*:22007 

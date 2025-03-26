@@ -1,12 +1,9 @@
-using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using nehsanet_app.Models;
 using nehsanet_app.utilities;
 using nehsanet_app.Types;
-using nehsanet_app.Services;
 using nehsanet_app.db;
-using static nehsanet_app.utilities.ControllerUtility;
+using nehsanet_app.Models;
 
 namespace nehsanet_app.Controllers
 {
@@ -54,7 +51,8 @@ namespace nehsanet_app.Controllers
             "“Breathe and allow things to pass.” - Warren Buffett",
             "“Let everything happen to you: beauty and terror. Just keep going. No feeling is final.” - Rainer Maria Rilke",
             "“Take me as I come 'cause I can't stay long.” - Tom Petty and the Heartbreakers",
-            "rm -recurse .\\node_modules\\; rm .\\package-lock.json; npm install"            
+            "rm -recurse ./node_modules; rm -recurse ./dist; rm ./package-lock.json; npm install; tsc",
+            "The little things we get mad about are like snowflakes on the mountains, and we if wait too long then we're just one sneeze away from an avalanche that'll kill us all.” - Will Kitman",
         ];
 
         readonly List<string> positiveaffirmations =
@@ -102,9 +100,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/positiveadjective")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetPositiveAdjective()
+        public async Task<ActionResult<ApiResponseGeneric>> GetPositiveAdjective()
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -142,9 +140,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/getweather")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetWeather([FromQuery] string city, [FromQuery] string units, [FromQuery] string weatherType)
+        public async Task<ActionResult<ApiResponseGeneric>> GetWeather([FromQuery] string city, [FromQuery] string units, [FromQuery] string weatherType)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -214,9 +212,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/Scraper")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> Scraper([FromQuery] string scrapeUrl)
+        public async Task<ActionResult<ApiResponseGeneric>> Scraper([FromQuery] string scrapeUrl)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -254,9 +252,9 @@ namespace nehsanet_app.Controllers
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> UpdateName(NameType namePerson)
+        public async Task<ActionResult<ApiResponseGeneric>> UpdateName(NameType namePerson)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -280,9 +278,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/quote")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetQuote()
+        public async Task<ActionResult<ApiResponseGeneric>> GetQuote()
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -306,9 +304,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/related")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetRelated([FromQuery] string page)
+        public async Task<ActionResult<ApiResponseGeneric>> GetRelated([FromQuery] string page)
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
@@ -333,9 +331,9 @@ namespace nehsanet_app.Controllers
         [HttpGet]
         [Route("/v1/dbhealth")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetDBHealth()
+        public async Task<ActionResult<ApiResponseGeneric>> GetDBHealth()
         {
-            ApiResponse response = new();
+            ApiResponseGeneric response = new();
             response.Success = false;
 
             try
