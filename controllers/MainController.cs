@@ -53,6 +53,7 @@ namespace nehsanet_app.Controllers
             "“Take me as I come 'cause I can't stay long.” - Tom Petty and the Heartbreakers",
             "rm -recurse ./node_modules; rm -recurse ./dist; rm ./package-lock.json; npm install; tsc",
             "The little things we get mad about are like snowflakes on the mountains, and we if wait too long then we're just one sneeze away from an avalanche that'll kill us all.” - Will Kitman",
+            "Go fix yourself, instead of someone else.” - Placebo",
         ];
 
         readonly List<string> positiveaffirmations =

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using nehsanet_app.db;
 using nehsanet_app.Models;
 using nehsanet_app.Types;
+using nehsanet_app.Utilities;
 
 namespace nehsanet_app.Controllers
 {
@@ -94,7 +95,7 @@ namespace nehsanet_app.Controllers
                 }
                 response.Names = items;
                 response.Success = true;
-                response.IP = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+                response.IP = IpHelper.GetClientIpAddress(httpContextAccessor?.HttpContext);
             }
             catch (Exception e)
             {
