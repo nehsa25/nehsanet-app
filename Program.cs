@@ -153,14 +153,14 @@ namespace WebApp
                 _.IncludeFormattedMessage = true;
                 _.AddOtlpExporter(exporter =>
                     {
-                        exporter.Endpoint = new Uri("http://127.0.0.1:5341/ingest/otlp/v1/logs");
+                        exporter.Endpoint = new Uri("http://util.nehsa.net:5341/ingest/otlp/v1/logs");
                         exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
                         exporter.Headers = $"X-Seq-ApiKey={nehsanet_app.Secrets.Seq.ApiKey}";
                     });
             });
 
             webApplicationBuilder.Services.AddOpenTelemetry()
-                  .ConfigureResource(
+                .ConfigureResource(
                     resource =>
                     {
                         resource.AddService(serviceName);
