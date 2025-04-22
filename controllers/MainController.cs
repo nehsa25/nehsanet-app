@@ -55,6 +55,7 @@ namespace nehsanet_app.Controllers
             "The little things we get mad about are like snowflakes on the mountains, and we if wait too long then we're just one sneeze away from an avalanche that'll kill us all.” - Will Kitman",
             "Go fix yourself, instead of someone else.” - Placebo",
             "Hey, cool it man.” - Larry T. Marshall, a.k.a. Simon Zealotes (Jesus Christ Superstar)",
+            "The harder you work, the luckier you get.” - Gary Player",
         ];
 
         readonly List<string> positiveaffirmations =
