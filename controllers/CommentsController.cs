@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace nehsanet_app.Controllers
 {
     [ApiController]
-    public class CommentsControler(ILogger<CommentsControler> logger, DataContext context) : ControllerBase
+    public class CommentsController(ILogger<CommentsController> logger, DataContext context) : ControllerBase
     {
         private readonly ILogger _logger = logger;
         private readonly DataContext _context = context;
