@@ -20,6 +20,9 @@ COPY dontcheckin.py ./
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt --break-system-packages --no-cache-dir
 
+# copy sql database
+COPY game_data.db ./
+
 # Check the installed version of Python
 RUN python3 --version
 
