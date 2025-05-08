@@ -14,6 +14,13 @@ public class MudRace
     public string? Directives { get; set; }
     public int? BaseExperienceAdjustment { get; set; }
     public bool? Playable { get; set; }
+    public int? Strength { get; set; }
+    public int? Intelligence { get; set; }
+    public int? Wisdom { get; set; }
+    public int? Charisma { get; set; }
+    public int? Constitution { get; set; }
+    public int? Dexterity { get; set; }
+    public int? Luck { get; set; }
 }
 
 public class MudClass
@@ -25,6 +32,13 @@ public class MudClass
     public string? Directives { get; set; }
     public int? BaseExperienceAdjustment { get; set; }
     public bool? Playable { get; set; }
+    public int? Strength { get; set; }
+    public int? Intelligence { get; set; }
+    public int? Wisdom { get; set; }
+    public int? Charisma { get; set; }
+    public int? Constitution { get; set; }
+    public int? Dexterity { get; set; }
+    public int? Luck { get; set; }
 }
 
 [ApiController]
@@ -54,14 +68,22 @@ public class MudController : ControllerBase
         {
             var sql = @"
                 select 
-                    id,
-                    name,
-                    description,
-                    abilities,
-                    directives,
-                    base_experience_adjustment as BaseExperienceAdjustment,
-                    playable
-                from player_races;
+                    pr.id,
+                    pr.name,
+                    pr.description,
+                    pr.abilities,
+                    pr.directives,
+                    pr.base_experience_adjustment as BaseExperienceAdjustment,
+                    pr.playable,
+                    a.strength,
+                    a.intelligence,
+                    a.wisdom,
+                    a.charisma,
+                    a.constitution,
+                    a.dexterity,
+                    a.luck
+                from player_races pr
+                LEFT JOIN attributes a ON pr.attributes_id = a.id;
             ";
 
             using IDbConnection connection = new SqliteConnection($"Data Source={_dbPath}");
@@ -91,15 +113,23 @@ public class MudController : ControllerBase
         try
         {
             var sql = @"
-                select 
-                    id,
-                    name,
-                    description,
-                    abilities,
-                    directives,
-                    base_experience_adjustment as BaseExperienceAdjustment,
-                    playable
-                from player_classes;
+                SELECT 
+                    mc.id,
+                    mc.name,
+                    mc.description,
+                    mc.abilities,
+                    mc.directives,
+                    mc.base_experience_adjustment as BaseExperienceAdjustment,
+                    mc.playable,
+                    a.strength,
+                    a.intelligence,
+                    a.wisdom,
+                    a.charisma,
+                    a.constitution,
+                    a.dexterity,
+                    a.luck
+                FROM player_classes mc
+                LEFT JOIN attributes a ON mc.attributes_id = a.id;
             ";
             using IDbConnection connection = new SqliteConnection($"Data Source={_dbPath}");
             connection.Open();
