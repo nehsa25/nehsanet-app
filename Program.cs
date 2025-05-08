@@ -100,7 +100,8 @@ namespace WebApp
                             Environment.GetEnvironmentVariable("NEHSA_JWT_SECURITY_KEY") ?? ""))
             };
 
-            webApplicationBuilder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            webApplicationBuilder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = tokenValidationParameters;
@@ -115,7 +116,8 @@ namespace WebApp
                 });
 
             // Add authorization support
-            webApplicationBuilder.Services.AddAuthorizationBuilder()
+            webApplicationBuilder.Services
+                .AddAuthorizationBuilder()
                 .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
                 .AddPolicy("New", policy => policy.RequireRole("New"))
                 .AddPolicy("User", policy => policy.RequireRole("User"));
@@ -132,7 +134,8 @@ namespace WebApp
                                             "https://nehsa.net",
                                             "https://www.nehsa.net",
                                             "http://localhost:4200",
-                                            "https://localhost:4200")
+                                            "https://localhost:4200",
+                                            "http://localhost:5173")
                                 .AllowAnyMethod() // without this, only GET and POST are allowed.
                                 .AllowAnyHeader() // without this, only the default headers are allowed.
                                 .AllowCredentials();

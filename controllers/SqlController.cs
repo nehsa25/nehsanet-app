@@ -107,7 +107,7 @@ public class SqliteSchemaController : ControllerBase
 
         // Get index info
         tableSchema.Indices = GetIndices(connection, tableName);
-        
+
         return tableSchema;
     }
 
@@ -176,9 +176,9 @@ public class SqliteSchemaController : ControllerBase
                 {
                     if (!reader.IsDBNull(2)) //Column Name is in the third column (2)
                     {
-                         columns.Add(reader.GetString(2));
+                        columns.Add(reader.GetString(2));
                     }
-                   
+
                 }
             }
         }
@@ -188,36 +188,36 @@ public class SqliteSchemaController : ControllerBase
     // Define the classes to represent the schema
     public class ColumnSchema
     {
-        public string ColumnName { get; set; }
-        public string ColumnType { get; set; }
+        public string? ColumnName { get; set; }
+        public string? ColumnType { get; set; }
         public bool NotNull { get; set; }
-        public object DefaultValue { get; set; }  // Use object to handle nulls
+        public object? DefaultValue { get; set; }  // Use object to handle nulls
         public int PrimaryKey { get; set; }
     }
 
     public class TableSchema
     {
-        public string Name { get; set; }
-        public List<ColumnSchema> Schema { get; set; }
-        public List<ForeignKeySchema> ForeignKeys { get; set; }
-        public List<IndexSchema> Indices { get; set; }
+        public string? Name { get; set; }
+        public List<ColumnSchema>? Schema { get; set; }
+        public List<ForeignKeySchema>? ForeignKeys { get; set; }
+        public List<IndexSchema>? Indices { get; set; }
     }
 
     public class ForeignKeySchema
     {
-        public string FromColumn { get; set; }
-        public string ToTable { get; set; }
-        public string ToColumn { get; set; }
-        public string OnUpdate { get; set; }
-        public string OnDelete { get; set; }
-        public string Match { get; set; }
+        public string? FromColumn { get; set; }
+        public string? ToTable { get; set; }
+        public string? ToColumn { get; set; }
+        public string? OnUpdate { get; set; }
+        public string? OnDelete { get; set; }
+        public string? Match { get; set; }
     }
 
     public class IndexSchema
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public bool Unique { get; set; }
-        public List<string> Columns { get; set; }
+        public List<string>? Columns { get; set; }
     }
 }
 
