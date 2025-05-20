@@ -10,6 +10,7 @@ namespace nehsanet_app.db
         public DbSet<DBAnimal> DBAnimal { get; set; } = null!;
         public DbSet<DBComment> DBComment { get; set; } = null!;
         public DbSet<Page> DBPage { get; set; } = null!;
+        public DbSet<ContactUs> DBContactUs { get; set; } = null!;
         public DbSet<RelatedPage> DBRelatedPage { get; set; } = null!;
         public DbSet<Log> Logs { get; set; } = null!;
         public DbSet<LogLevel> LogLevels { get; set; } = null!;

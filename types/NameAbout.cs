@@ -10,4 +10,16 @@ namespace nehsanet_app.Types
     {
         public string Name { get; set; } = Name;
     }
+
+    public class ContactMeRequest(string Name)
+    {
+        public string Name { get; set; } = Name;
+        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+    }
+
+    public class ContactMeResponse()
+    {
+        public bool Success { get; set; } = true;
+    }
 }

@@ -134,6 +134,11 @@ namespace WebApp
                                             "https://nehsa.net",
                                             "https://www.nehsa.net",
                                             "http://localhost:4200",
+                                            "http://localhost:3000",
+                                            "http://stonedogcode.com",
+                                            "https://stonedogcode.com",
+                                            "http://www.stonedogcode.com",
+                                            "https://www.stonedogcode.com",
                                             "https://localhost:4200",
                                             "http://localhost:5173")
                                 .AllowAnyMethod() // without this, only GET and POST are allowed.

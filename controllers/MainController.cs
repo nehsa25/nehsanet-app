@@ -252,6 +252,29 @@ namespace nehsanet_app.Controllers
             return response;
         }
 
+
+        [HttpPost]
+        [Route("/v1/contactme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ContactMeResponse>> Contactme(ContactMeRequest info)
+        {
+            // send email
+            _logger.LogInformation("Enter: Contactme() [POST]: {info}", JsonSerializer.Serialize(info));
+
+            // add record to ContactUs table
+            ContactUs contact = new()
+            {
+                Name = info.Name,
+                Email = info.Email,
+                Message = info.Message
+            };
+            await _context.DBContactUs.AddAsync(contact);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Contactme: Added record to DBContactUs table.");
+           
+            return Ok(new ContactMeResponse());            
+        }
+
         [HttpPost]
         [Route("/v1/name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
