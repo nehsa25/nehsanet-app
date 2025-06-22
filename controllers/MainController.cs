@@ -56,7 +56,8 @@ namespace nehsanet_app.Controllers
             "“Go fix yourself, instead of someone else.” - Placebo",
             "“Hey, cool it man.” - Larry T. Marshall, a.k.a. Simon Zealotes (Jesus Christ Superstar)",
             "“The harder you work, the luckier you get.” - Gary Player",
-            "“Make plans like an adult, and believe in them like a child” - Jim Rohn."
+            "“Make plans like an adult, and believe in them like a child.” - Jim Rohn",
+            "“It's one thing to have a dream, it's another to go after it.” - Zeff"
         ];
 
         readonly List<string> positiveaffirmations =
